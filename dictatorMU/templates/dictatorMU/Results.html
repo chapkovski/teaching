@@ -1,0 +1,415 @@
+{% extends "global/Base.html" %}
+{% load staticfiles otree_tags %}
+
+{% block title %}
+    Results
+{% endblock %}
+
+{% block content %}
+<!-- <div id="highcharts_container1" style="width: 700px;"></div> -->
+<div id="container_decision" class = "filkinchart" style="width:80%;height:350px;margin:1.5em 1em;"></div>
+
+<div id="container_belief" style="width:80%;height:350px;margin:1.5em 1em;"></div>
+<div id="container_norm" style="width:80%;height:350px;margin:1.5em 1em;"></div>
+<div id="container_others_belief" style="width:80%;height:350px;margin:1.5em 1em;"></div>
+
+        {% next_button %}
+
+{% endblock %}
+
+{% block scripts %}
+<script src="//code.highcharts.com/highcharts.js"></script>
+<script src="//code.highcharts.com/highcharts-3d.js"></script>
+
+<script type="text/javascript">
+  //options set for highcharts
+  Highcharts.setOptions({
+   global: {
+     useUTC: false
+   },
+   colors: [
+     'rgba( 0,   154, 253, 0.9 )', //bright blue
+     'rgba( 253, 99,  0,   0.9 )', //bright orange
+     'rgba( 40,  40,  56,  0.9 )', //dark
+     'rgba( 253, 0,   154, 0.9 )', //bright pink
+     'rgba( 154, 253, 0,   0.9 )', //bright green
+     'rgba( 145, 44,  138, 0.9 )', //mid purple
+     'rgba( 45,  47,  238, 0.9 )', //mid blue
+     'rgba( 177, 69,  0,   0.9 )', //dark orange
+     'rgba( 140, 140, 156, 0.9 )', //mid
+     'rgba( 238, 46,  47,  0.9 )', //mid red
+     'rgba( 44,  145, 51,  0.9 )', //mid green
+     'rgba( 103, 16,  192, 0.9 )' //dark purple
+   ],
+   chart: {
+     alignTicks: false,
+     type: 'column',
+     margin: [60, 25, 100, 90],
+     //borderRadius:10,
+     //borderWidth:1,
+     //borderColor:'rgba(156,156,156,.25)',
+    //  backgroundColor:'rgba(204,204,204,.25)',
+    //  plotBackgroundColor:'rgba(255,255,255,1)',
+     style: {
+       fontFamily: 'Abel,serif'
+     }
+   },
+   title: {
+     text: ' ',
+     align: 'left',
+     margin: 10,
+     x: 25,
+     style: {
+       fontWeight: 'bold',
+       color: 'rgba(0,0,0,.9)'
+     }
+   },
+   subtitle: {
+    //  enabled:false,
+     text: ' ',
+     align: 'left',
+     x: 30,
+   },
+   legend: {
+     enabled: false
+   },
+   credits: {
+   enabled: false
+},
+   plotOptions: {
+     series: {
+       minPointLength: 2,
+       pointPadding: 0,
+       groupPadding: 0,
+
+   color:'red',
+   borderWidth: 1 ,
+   borderColor: 'black',
+ },
+     area: {
+       lineWidth: 1,
+       marker: {
+         enabled: false,
+         symbol: 'circle',
+         radius: 4
+       }
+     },
+     arearange: {
+       lineWidth: 1
+     },
+     areaspline: {
+       lineWidth: 1,
+       marker: {
+         enabled: false,
+         symbol: 'circle',
+         radius: 4
+       }
+     },
+
+     areasplinerange: {
+       lineWidth: 1
+     },
+     boxplot: {
+       groupPadding: 0.05,
+       pointPadding: 0.05,
+       fillColor: 'rgba(255,255,255,.75)'
+     },
+     bubble: {
+       minSize: '0.25%',
+       maxSize: '17%'
+     },
+     column: {
+       //stacking:'normal',
+       groupPadding: 0,
+       pointPadding: 0.0,
+       borderWidth: 1 ,
+       borderColor: 'black',
+     },
+     columnrange: {
+       groupPadding: 0.05,
+       pointPadding: 0.05
+     },
+     errorbar: {
+       groupPadding: 0.05,
+       pointPadding: 0.05,
+       showInLegend: true
+     },
+     line: {
+       lineWidth: 1,
+       marker: {
+         enabled: false,
+         symbol: 'circle',
+         radius: 4
+       }
+     },
+     scatter: {
+       marker: {
+         symbol: 'circle',
+         radius: 5
+       }
+     },
+     spline: {
+       lineWidth: 1,
+       marker: {
+         enabled: false,
+         symbol: 'circle',
+         radius: 4
+       }
+     },
+     series: {
+       shadow: false,
+       borderWidth: 1 ,
+       borderColor: 'black',
+       states: {
+         hover: {
+           lineWidthPlus: 0,
+         }
+       }
+     }
+   },
+   xAxis: {
+     title: {
+       text: 'Tokens',
+       rotation: 0,
+       textAlign: 'center',
+       style: {
+         color: 'rgba(0,0,0,.9)'
+       }
+     },
+     labels: {
+       style: {
+         color: 'rgba(0,0,0,.9)',
+         fontSize: '9px'
+       }
+     },
+     lineWidth: .5,
+     lineColor: 'rgba(0,0,0,.5)',
+     tickWidth: .5,
+     tickLength: 3,
+     tickColor: 'rgba(0,0,0,.75)'
+   },
+   yAxis: {
+     minPadding: 0,
+     maxPadding: 0,
+     gridLineColor: 'rgba(204,204,204,.25)',
+     gridLineWidth: 0.5,
+     title: {
+       text: 'Frequency',
+      //  rotation: 0,
+       textAlign: 'right',
+       style: {
+         color: 'rgba(0,0,0,.9)',
+       }
+     },
+     labels: {
+       style: {
+         color: 'rgba(0,0,0,.9)',
+         fontSize: '9px'
+       }
+     },
+     lineWidth: .5,
+     lineColor: 'rgba(0,0,0,.5)',
+     tickWidth: .5,
+     tickLength: 3,
+     tickColor: 'rgba(0,0,0,.75)'
+   }
+ });
+</script>
+
+<script>
+var chart,
+  mad,
+  binnedData,
+  rawDataDecision = {{all_decisions}},
+  rawDataBeliefs = {{all_beliefs}},
+  rawDataNorms = {{all_norms}},
+  rawDataOtherBeliefs = {{all_others_beliefs}},
+  binnedDataDecisions = binData(rawDataDecision),
+  binnedDataBeliefs = binData(rawDataBeliefs),
+  binnedDataNorms = binData(rawDataNorms),
+  binnedDataOthersBeliefs = binData(rawDataOtherBeliefs);
+
+
+$(function() {
+
+  chartDecision = $('#container_decision').highcharts({
+
+           title: {
+          text: 'Decisions' // Title for the chart
+      },
+      plotOptions: {
+        series: {
+color: Highcharts.getOptions().colors[1]
+
+        }},
+    });
+  chartBeliefs = $('#container_belief').highcharts({
+
+           title: {
+          text: 'Beliefs' // Title for the chart
+      },
+      plotOptions: {
+        series: {
+color: Highcharts.getOptions().colors[5]
+
+        }},
+  });
+  chartNorms = $('#container_norm').highcharts({
+
+           title: {
+          text: 'Norms' // Title for the chart
+      },
+      plotOptions: {
+        series: {
+
+color: Highcharts.getOptions().colors[3]
+        }},
+  });
+  chartOthersBeliefs = $('#container_others_belief').highcharts({
+
+           title: {
+          text: "Others' Beliefs" // Title for the chart
+      },
+      plotOptions: {
+        series: {
+
+color: Highcharts.getOptions().colors[4]
+
+        }},
+  });
+
+  //add data
+  dec = $('#container_decision').highcharts();
+  belief = $('#container_belief').highcharts();
+  norm = $('#container_norm').highcharts();
+  otherbelief = $('#container_others_belief').highcharts();
+  dec.addSeries({
+    name: 'Distribution',
+    data: binnedDataDecisions,
+  });
+
+  belief.addSeries({
+    name: 'Distribution1',
+    data: binnedDataBeliefs,
+  });
+
+  norm.addSeries({
+    name: 'Distribution1',
+    data: binnedDataNorms,
+  });
+
+  otherbelief.addSeries({
+    name: 'Distribution1',
+    data: binnedDataOthersBeliefs,
+  });
+
+  dec.xAxis[0].addPlotLine({
+    value: {{average_decision}},
+    width: 2,
+    color: 'green',
+    zIndex: 8,
+    label: {text:'Average',}
+  });
+  dec.xAxis[0].addPlotLine({
+    value: {{player.kept}},
+    width: 2,
+    color: 'red',
+    zIndex: 8,
+    label: {text:'Your choice: {{player.kept|c}}',}
+  });
+belief.xAxis[0].addPlotLine({
+  value: {{average_belief}},
+  width: 2,
+  color: 'green',
+  zIndex: 8,
+  label: {text:'Average',}
+});
+belief.xAxis[0].addPlotLine({
+  value: {{player.belief}},
+  width: 2,
+  color: 'red',
+  zIndex: 8,
+  label: {text:'Your choice: {{player.belief|c}}',}
+});
+norm.xAxis[0].addPlotLine({
+    value: {{average_norm}},
+    width: 2,
+    color: 'green',
+    zIndex: 8,
+    label: {text:'Average',}
+  });
+norm.xAxis[0].addPlotLine({
+    value: {{player.norm}},
+    width: 2,
+    color: 'red',
+    zIndex: 8,
+    label: {text:'Your choice: {{player.norm|c}}',}
+  });
+otherbelief.xAxis[0].addPlotLine({
+    value: {{average_others_belief}},
+    width: 2,
+    color: 'green',
+    zIndex: 8,
+    label: {text:'Average',}
+  });
+otherbelief.xAxis[0].addPlotLine({
+    value: {{player.others_belief}},
+    width: 2,
+    color: 'red',
+    zIndex: 8,
+    label: {text:'Your choice: {{player.others_belief|c}}',}
+  });
+});
+
+//-------------------------------------------------------
+function binData(data) {
+
+  var hData = new Array(), //the output array
+    size = data.length, //how many data points
+    bins = Math.round(Math.sqrt(size)); //determine how many bins we need
+  bins = bins > 50 ? 50 : bins; //adjust if more than 50 cells
+  var max = Math.max.apply(null, data), //lowest data value
+    min = Math.min.apply(null, data), //highest data value
+    range = max - min, //total range of the data
+    width = range / bins, //size of the bins
+    bin_bottom, //place holders for the bounds of each bin
+    bin_top;
+
+  //loop through the number of cells
+  for (var i = 0; i < bins; i++) {
+
+    //set the upper and lower limits of the current cell
+    bin_bottom = min + (i * width);
+    bin_top = bin_bottom + width;
+
+    //check for and set the x value of the bin
+    if (!hData[i]) {
+      hData[i] = new Array();
+      hData[i][0] = bin_bottom + (width / 2);
+    }
+
+    //loop through the data to see if it fits in this bin
+    for (var j = 0; j < size; j++) {
+      var x = data[j];
+
+      //adjust if it's the first pass
+      i == 0 && j == 0 ? bin_bottom -= 1 : bin_bottom = bin_bottom;
+
+      //if it fits in the bin, add it
+      if (x > bin_bottom && x <= bin_top) {
+        !hData[i][1] ? hData[i][1] = 1 : hData[i][1]++;
+      }
+    }
+  }
+  $.each(hData, function(i, point) {
+    if (typeof point[1] == 'undefined') {
+      hData[i][1] = null;
+    }
+  });
+  return hData;
+}
+
+
+
+</script>
+{% endblock %}

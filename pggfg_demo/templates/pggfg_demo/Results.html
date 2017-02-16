@@ -1,0 +1,87 @@
+{% extends "global/Base.html" %}
+{% load staticfiles otree_tags %}
+
+{% block title %}
+    Results
+{% endblock %}
+
+{% block content %}
+
+
+
+
+<h3>Contributing chart</h2>
+<div id="highcharts-container"
+         style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+         {% next_button %}
+
+    <table class="table-condensed" style="width:500px; margin-top:20px;">
+        <tr><td>You contributed:</td><td>{{ player.contribution }}</td></tr>
+        <tr><td>Other participants contributed:</td><td></td></tr>
+        {% for p in your_group_contrib %}
+            <tr><td></td><td>{{ p }}</td></tr>
+        {% endfor %}
+
+        <tr><td>Total contribution:</td><td>{{ player.total_contribution }}</td></tr>
+
+        <tr><td colspan="2"><hr/></td></tr>
+
+        <tr><td>Your earnings from the project:</td><td>{{ player.individual_share }}</td></tr>
+
+        <tr><td colspan="2"><hr/></td></tr>
+
+        <tr><td>Thus in total you earned:</td><td>{{ player.payoff }}</td></tr>
+
+    </table>
+    <p></p>
+
+
+
+
+
+{% endblock %}
+
+{% block scripts %}
+    <script src="//code.highcharts.com/highcharts.js"></script>
+    <script src="//code.highcharts.com/highcharts-3d.js"></script>
+
+    <script>
+        $(function () {
+            $('#highcharts-container').highcharts({
+                title: {
+                    text: 'Results'
+                },
+                chart: {
+       type: 'scatter',
+       zoomType: 'xy'
+   },
+                xAxis: {
+                    // categories: {{ round_numbers }},
+                    title: {text: 'Round'},
+                    allowDecimals: false,
+                    // minTickInterval: 1,
+                },
+                yAxis: {
+                    title: {
+                        text: 'Points'
+                    },
+                    // plotLines: [{
+                    //     value: 10,
+                    //     width: 10,
+                    //     color: 'red'
+                    // }]
+                },
+                tooltip: {
+                    valueSuffix: ' points'
+                },
+                legend: {
+                    layout: 'vertical',
+                    align: 'right',
+                    verticalAlign: 'middle',
+                    borderWidth: 0
+                },
+                series: {{ highcharts_series }}
+            });
+        });
+    </script>
+{% endblock %}

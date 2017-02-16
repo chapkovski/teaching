@@ -1,0 +1,67 @@
+{% extends "global/Base.html" %}
+{% load staticfiles otree_tags %}
+
+
+
+{% block styles %}
+
+  <style type="text/css">
+  td {
+    text-align: center;
+    vertical-align: middle;
+  }
+  th {
+    text-align: center;
+    vertical-align: middle;
+  }
+  tr {
+    text-align: center;
+    vertical-align: middle;
+  }
+  </style>
+{% endblock %}
+
+{% block title %}
+    Detection
+{% endblock %}
+{% block scripts %}
+  <script type="text/javascript">
+  //   var a =1;
+  //
+  //     $(function () {
+  //     var contribsTLC = {{tlcs}};
+  //     jQuery.each( contribsTLC, function( i, val ) {
+  // console.log( "Mine is " + val + "." );})
+  //       });
+
+  </script>
+{% endblock %}
+{% block content %}
+
+    {% include Constants.instructions_template %}
+  <table class="table table-striped">
+    <tr>
+        <th>Participant</th><th>Contribution</th><th>Punish</th><th>not to Punish</th>
+    </tr>
+    {% for ab in abclist %}
+    <tr>
+        <td>
+            {{ ab.2 }}
+            {{ ab.0.errors }}
+        </td><td >{{ ab.1}}</td>
+        <td><input type="radio" name="{{ ab.0.html_name}}" value="True" required {% if ab.0.value == 'True' %}checked{% endif %}></td>
+        <td><input type="radio" name="{{ ab.0.html_name}}" value="False" required {% if ab.0.value == 'False' %}checked{% endif %}></td>
+    </tr>
+    {% endfor %}
+</table>
+
+
+<br>
+  ----------------------
+  <p>{% for ab in abclist %}
+    {{ab.0.label}}
+    {{ab.1}}
+{% endfor %}</p>
+    {% next_button %}
+
+{% endblock %}

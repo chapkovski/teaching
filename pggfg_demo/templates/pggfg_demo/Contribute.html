@@ -1,0 +1,120 @@
+{% extends "global/Base.html" %}
+{% load staticfiles otree_tags %}
+
+{% block title %}
+      Contribution (Period {{ subsession.round_number }} of {{ Constants.num_rounds }})
+{% endblock %}
+
+{% block content %}
+<h4>If you contribute:</h4>
+
+<div id="slider_you" class='sliders'> <div id="custom-handle" class="ui-slider-handle"></div></div>
+<h4>... and average contribution of other {{n_other_players}} participants:</h4>
+<div id="slider_others" class='sliders'> <div id="custom-handle" class="ui-slider-handle"></div></div>
+<h4>Then:</h4>
+<table class="table table-striped">
+    <tr>
+
+        <td>Total contribution will be:</td>
+        <td id='totalcontrib'></td>
+    </tr>
+    <tr>
+
+        <td>You will receive from a group project:</td>
+        <td id='individualshare'></td>
+    </tr>
+    <tr>
+
+        <td>Your earnings would be:</td>
+        <td id='yourearnings'></td>
+    </tr>
+</table>
+
+<hr>
+    {% formfield player.contribution with label="How much will you contribute to the project (from 0 to 100)?" %}
+
+    {% next_button %}
+
+    {% include Constants.instructions_template %}
+
+{% endblock %}
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+<script type='text/javascript'>//<![CDATA[
+$(window).load(function(){
+  var efficiency_factor = {{Constants.efficiency_factor}};
+  var group_size = {{Constants.group_size}};
+  var endowment = {{Constants.endowment}}
+  var default_value = {{Constants.endowment}}/2;
+  var changetab = function(start=false,who,curvalue=0 ) {
+    var val_others =  default_value;
+    var val_you =  default_value;
+    if ( start==false) {
+    if (who=='slider_you'){
+      var val_others = $('#slider_others').slider("option", "value");
+      var val_you = curvalue;
+    }
+    else {
+      var val_others = curvalue;
+      var val_you = $('#slider_you').slider("option", "value");
+    };
+  };
+
+    var total = val_others*(group_size-1)+val_you
+    var indshare = total*efficiency_factor/group_size
+    $('td#totalcontrib').text(total);
+    $('td#individualshare').text(indshare);
+    $('td#yourearnings').text(endowment-val_you+indshare);
+
+   };
+$(".sliders").slider(
+
+{
+
+            value:{{Constants.endowment}}/2,
+            min: 0,
+            max: {{Constants.endowment}},
+            step: 1,
+             
+            create: function() {
+              var handle = $(this).children("#custom-handle" );
+              handle.text( $( this ).slider( "value" ) );
+              curname=$(this).attr('id');
+              changetab(true, curname,default_value);
+            },
+            slide: function( event, ui ) {
+              var handle = $(this).children("#custom-handle" );
+              curname=$(this).attr('id');
+
+              handle.text( ui.value );
+              changetab(false, curname,ui.value);
+            }
+}
+);
+
+
+
+});//]]>
+
+</script>
+  {% endblock %}
+{% block styles %}
+
+<link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/themes/base/jquery-ui.css">
+<style>
+table > *:first-child:not(thead) td:first-child {
+  font-weight: bold;
+}
+#custom-handle {
+  width: 3em;
+  height: 1.6em;
+  top: 50%;
+  margin-top: -.8em;
+  text-align: center;
+  line-height: 1.6em;
+}
+</style>
+
+  {% endblock %}

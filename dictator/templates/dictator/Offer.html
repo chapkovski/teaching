@@ -1,0 +1,75 @@
+{% extends "global/Base.html" %} {% load otree_tags %} {% block title %}Period {{ subsession.round_number }} of {{ Constants.num_rounds }}{% endblock %} {% block content %}
+
+<p>
+    You are <strong>Participant 1</strong>. Now please decide how many points you will keep for yourself.
+</p>
+
+{% formfield player.kept %}
+
+
+<div id="highcharts_container1" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+<!-- <div id="highcharts_container2" style="width: 700px;"></div> -->
+{% next_button %} {% include Constants.instructions_template %} {% endblock %} {% block scripts %}
+<script src="//code.highcharts.com/highcharts.js"></script>
+<script src="//code.highcharts.com/highcharts-3d.js"></script>
+
+<script>
+$(function() {
+    var chart;
+    $(document).ready(function() {
+
+      var container_chartCorrectiveAction = new Highcharts.Chart({
+
+              // $('#highcharts-container').highcharts({
+                chart: {
+              renderTo: 'highcharts_container1',
+
+              // type: 'bar',
+              height: 395
+
+          },
+          title: {
+              text: 'Results'
+          },
+          xAxis: {
+              categories: {{round_numbers}},
+              title: {
+                  text: 'Round'
+              },
+              plotLines: [{
+                  value: 2,
+                  width: 10,
+                  color: 'red'
+              }]
+          },
+          yAxis: {
+             min:0,
+             max:{{Constants.endowment}},
+              title: {
+                  text: 'Points'
+              },
+              plotLines: [{
+                  value: 2,
+                  width: 10,
+                  color: 'red'
+              }]
+          },
+          tooltip: {
+              valueSuffix: 'mafa'
+          },
+          legend: {
+              layout: 'vertical',
+              align: 'right',
+              verticalAlign: 'middle',
+              borderWidth: 10
+          },
+          series: {{  series_to_pass}},
+          });
+    });
+});
+
+
+
+</script>
+{% endblock %}

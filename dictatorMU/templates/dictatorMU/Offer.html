@@ -1,0 +1,20 @@
+{% extends "global/Base.html" %} {% load otree_tags %}
+{% block title %}
+
+{{title}}
+
+{% endblock %}
+
+ {% block content %}
+ {% if instructions %}
+   {% include instructions %}
+ {% endif %}
+
+
+
+{% for field in form %}
+    {% formfield field %}
+{% endfor %}
+
+{% next_button %}
+{% endblock %}

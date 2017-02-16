@@ -1,0 +1,115 @@
+{% extends "global/Base.html" %} {% load staticfiles otree_tags %}
+{% block title %} Results {% endblock %}
+
+{% block scripts %}
+    <script src="//code.highcharts.com/highcharts.js"></script>
+    <script src="//code.highcharts.com/highcharts-3d.js"></script>
+
+    <script>
+        $(function () {
+            $('#highcharts-container').highcharts({
+                title: {
+                    text: 'Results'
+                },
+                chart: {
+       type: 'scatter',
+       zoomType: 'xy'
+   },
+                xAxis: {
+                    // categories: {{ round_numbers }},
+                    title: {text: 'Round'},
+                    allowDecimals: false,
+                    // minTickInterval: 1,
+                },
+                yAxis: {
+                    title: {
+                        text: 'Points'
+                    },
+                    // plotLines: [{
+                    //     value: 10,
+                    //     width: 10,
+                    //     color: 'red'
+                    // }]
+                },
+                tooltip: {
+                    valueSuffix: 'mafa'
+                },
+                legend: {
+                    layout: 'vertical',
+                    align: 'right',
+                    verticalAlign: 'middle',
+                    borderWidth: 0
+                },
+                series: {{ highcharts_series }}
+            });
+        });
+    </script>
+{% endblock %}
+
+
+
+{% block content %}
+<h2>highcharts container</h2>
+<div id="highcharts-container"
+         style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+<h3>A person.s contribuitons across rounds</h3>
+<table class="table table-striped">
+    <tr>
+
+        <th>Round</th>
+        <th>Contrib</th>
+    </tr>
+    {% for abc in personcontribs %}
+    <tr>
+
+        <td>{{abc.1}}</td>
+        <td>{{ abc.0}}</td>
+
+    </tr>
+    {% endfor %}
+</table>
+
+
+<h3>Average contributoins' of individual's group</h3>
+
+<table class="table table-striped">
+    <tr>
+
+        <th>Round</th>
+        <th>Contrib</th>
+    </tr>
+    {% for abc in groupcontribs %}
+    <tr>
+      <td>{{abc.1}}</td>
+      <td>{{ abc.0}}</td>
+
+
+
+    </tr>
+    {% endfor %}
+</table>
+
+<h3>all contributions in session</h3>
+<table class="table table-striped">
+    <tr>
+
+        <th>Round</th>
+        <th>Contrib</th>
+    </tr>
+    {% for abc in allcontribstable %}
+    <tr>
+        <td>
+            {{ abc.1 }}
+
+        </td>
+        <td>{{ abc.2}}</td>
+
+
+    </tr>
+    {% endfor %}
+</table>
+
+
+{% next_button %}
+{% include Constants.instructions_template %}
+{% endblock %}
