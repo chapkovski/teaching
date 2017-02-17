@@ -3,7 +3,7 @@ from otree.api import (
     Currency as c, currency_range
 )
 import random
-
+from django import forms
 
 doc = """
 One player decides how to divide a certain amount between himself and the other
@@ -15,16 +15,31 @@ S285-S300.
 
 """
 
+# from django.db import models as m
 
 class Constants(BaseConstants):
     name_in_url = 'dictatorMU'
     players_per_group = None
     num_rounds = 1
-
-    instructions_template = 'dictatorMU/Instructions.html'
-
-    # Initial amount allocated to the dictator
     endowment = 10
+    GuessThreshold = 3
+    GuessPayoff = 20
+
+class MyFormField(forms.IntegerField):
+    def __init__(self, *args, **kwargs):
+        super(MyFormField, self).__init__(*args, **kwargs)
+        self.widget = forms.NumberInput(attrs={'class':'form-control'})
+
+class MyOwnField(models.IntegerField):
+    def __init__(self, *args, **kwargs):
+        kwargs['max'] = Constants.endowment
+        kwargs['min'] = 0
+        super(MyOwnField, self).__init__(*args, **kwargs)
+
+    def formfield(self, **kwargs):
+        defaults = {'form_class': MyFormField}
+        defaults.update(kwargs)
+        return super().formfield(**defaults)
 
 
 class Subsession(BaseSubsession):
@@ -37,30 +52,33 @@ class Group(BaseGroup):
     pass
 
 class Player(BasePlayer):
-    kept = models.PositiveIntegerField(
-        doc="""Amount dictator decided to keep for himself""",
-        min=0, max=Constants.endowment,
-        verbose_name='I will keep (from 0 to %i)' % Constants.endowment
+    ns6_1 = MyOwnField(
+        verbose_name="""What do you believe a sender should give? <br>
+        <b>I believe it is morally appropriate to give the following share of the %i points to receiver B: </b>"""% Constants.endowment
     )
-    belief = models.PositiveIntegerField(
-    doc="""Amount dictator beliefs others would keep for themselves""",
-    min=0, max=Constants.endowment,
-    verbose_name='How much  you believe all other participants will keep for themselves on average? (from 0 to %i)' % Constants.endowment
+    ns6_2 = MyOwnField(
+        verbose_name="""Imagine you are the receiver: what would you morally expect from the sender? <br>
+        <b>I believe it is morally appropriate to receive the following share of the %i points to sender A: </b>"""% Constants.endowment
+
     )
-    norm = models.PositiveIntegerField(
-    doc="""Amount dictator thinks people should keep for themselves""",
-    min=0, max=Constants.endowment,
-    verbose_name='In your opinion what amount should a person keep for him/herself? (from 0 to %i)' % Constants.endowment
+    ns6_3 = MyOwnField(
+        verbose_name="""Now put yourself in the shoes of the other receiver: what do you think the receiver morally expects from you? <br>
+        If you hit receiver B's actual answer to Questin2 by +/- {} points, you will receive {} points. <br>
+        <b>I think receiver B believes it is morally appropriate to receive the following share of the {} points from me: </b>""".format(Constants.GuessThreshold,Constants.GuessPayoff, Constants.endowment)
     )
-    others_belief = models.PositiveIntegerField(
-        doc="""Amount that dictator belives others expect from him to keep""",
-        min=0, max=Constants.endowment,
-        verbose_name='What amount you think other participants expect from you? (from 0 to %i)' % Constants.endowment
+    ns6_4 = MyOwnField(
+        verbose_name="""What is your decision as a sender? <br>
+        <b>I will give the following share of the %i points to receiver B: </b>"""% Constants.endowment
+    )
+    ns6_5 = MyOwnField(
+        verbose_name="""Imagine you are the receiver: what would you actually expect the sender to decide?<br>
+        If you hit sender A's actual answer by +/- {} points, you will recieve {}points.<br>
+        <b>I believe sender A will give the following share of the {} points to me: </b>""".format(Constants.GuessThreshold,Constants.GuessPayoff, Constants.endowment)
+    )
+    ns6_6 = MyOwnField(
+        verbose_name="""Now put yourself in the showes of the other receiver: how do you think the receiver expects you actually to decide?<br>
+        If you hit receiver B's actual answer by +/- {} points, you will receive {} points.<br>
+        <b>I believe receiver B blieves he/she will receive the following share of the {} points from me: </b>""".format(Constants.GuessThreshold,Constants.GuessPayoff, Constants.endowment)
     )
     def set_payoffs(self):
-        print('setting payoffs...')
-        # p1 = self.get_player_by_id(1)
-        # p2 = self.get_player_by_id(2)
         self.payoff = (self.kept)
-        # self.payoff=str(self.payoff)
-        # p2.payoff = Constants.endowment - self.kept

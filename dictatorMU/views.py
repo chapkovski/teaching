@@ -40,67 +40,42 @@ def MyFormWrapper(model_to_pass,fields_to_pass, *args, **kwargs):
 
 
 class MyPage(Page):
+    # def __init__(self, classtype):
+    #     self._type = classtype
+    #     self.__name__ ='pidor'
+
     form_model = models.Player
     template_name = 'dictatorMU/Offer.html'
+    title = ''
+    form_fields = ['ns6_1']
+    # instructions = ''
+    active1,active2 = ['']*2
     def vars_for_template(self):
         fields_to_pass = self.form_fields
         model_to_pass = self.form_model
         myform = MyFormWrapper(model_to_pass,fields_to_pass)
-        return {'form':myform,
-                 'title':self.title,
-                 'instructions':self.instructions,}
+
+        vs = {'form':myform,
+            'title': self.title,
+            # 'instructions': self.instructions,
+            'active1':self.active1,
+            'active2':self.active2,
+        }
+        vs.update(self.extra_vars())
+        return vs
+
+    def extra_vars(self):
+        return {}
 
 
 
-class Introduction(MyPage):
-    form_model = models.Player
-    form_fields = ['kept','others_belief','norm']
 
-# class ResultsWaitPage(WaitPage):
-#     def after_all_players_arrive(self):
-#         self.group.set_payoffs()
-#
-#     def vars_for_template(self):
-#         if self.player.id_in_group == 2:
-#             body_text = "You are participant 2. Waiting for participant 1 to decide."
-#         else:
-#             body_text = 'Please wait'
-#         return {'body_text': body_text}
-# class MyPage(Page):
-#     form_model = models.Player
-#     template_name = 'dictatorMU/Offer.html'
-#     title = ''
-#     instructions = ''
-#     def vars_for_template(self):
-#         vs = {
-#             'title': self.title,
-#             'instructions': self.instructions,
-#         }
-#         vs.update(self.extra_vars())
-#         return vs
-#
-#     def extra_vars(self):
-#         return {}
+class ResultsWaitPage(WaitPage):
+    wait_for_all_groups = True
+    def after_all_players_arrive(self):
+        pass
 
-class Kept(MyPage):
-    form_fields = ['kept']
-    title = 'Decision'
-    instructions = 'dictatorMU/InstructionsDecision.html'
 
-class Belief(MyPage):
-    form_fields = ['belief']
-    title = 'Belief'
-    instructions = 'dictatorMU/InstructionsBelief.html'
-
-class Norm(MyPage):
-    form_fields = ['norm']
-    title = 'Norm'
-    instructions = 'dictatorMU/InstructionsBelief.html'
-
-class Others_belief(MyPage):
-    form_fields = ['others_belief']
-    title = "Others' beliefs"
-    instructions = 'dictatorMU/InstructionsOtherBelief.html'
 
 class Results(Page):
     def is_displayed(self):
@@ -109,11 +84,14 @@ class Results(Page):
         return Constants.endowment - self.player.kept
 
     def vars_for_template(self):
-        print('PLAYER KEPT: {}'.format(self.player.kept))
-        all_decisions = [random.randint(0,Constants.endowment) for r in range(25)]
-        all_beliefs = [random.randint(0,Constants.endowment) for r in range(25)]
-        all_norms = [random.randint(0,Constants.endowment) for r in range(25)]
-        all_others_beliefs = [random.randint(0,Constants.endowment) for r in range(25)]
+        allplayers = self.subsession.get_players()
+        allothers = self.player.get_others_in_subsession()
+        randomplayer = random.choice([p for p in allplayers])
+        all_decisions = [p.kept for p in allplayers]
+        all_beliefs = [p.belief for p in allplayers]
+        all_norms = [p.norm for p in allplayers]
+        all_others_beliefs = [p.others_belief for p in allplayers]
+
 
         return {
             'all_decisions':safe_json(all_decisions),
@@ -127,12 +105,19 @@ class Results(Page):
         }
 
 
+
+
+li=[]
+for x in range(1, 7):
+    print(models.Player._meta.get_field('ns6_%i' % x).verbose_name)
+
+    globals()['X%i'% x] = type('X%i'% x, (MyPage,), dict(title="Question {}".format(x),
+    form_fields = ['ns6_{}'.format(x)]))
+    temp = globals()['X%i'% x]
+    li.append(temp)
+
 page_sequence = [
-    Introduction,
-    Kept,
-    Belief,
-    Norm,
-    Others_belief,
-    # ResultsWaitPage,
-    Results
+    ResultsWaitPage,
+    Results,
 ]
+page_sequence = li +page_sequence

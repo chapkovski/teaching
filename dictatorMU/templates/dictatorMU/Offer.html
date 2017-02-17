@@ -1,11 +1,26 @@
 {% extends "global/Base.html" %} {% load otree_tags %}
+{% load staticfiles %}
+{% block styles %}
+
+    <link href="{% static "dictatorMU/css/style.css" %}" rel="stylesheet">
+
+{% endblock %}
 {% block title %}
 
-{{title}}
+{{title}} {{active2}}
 
 {% endblock %}
 
  {% block content %}
+<div class="pics">
+  <div class="artiststhumbnail {{active1}}">
+      <img height="100px" src="{% static "dictatorMU/1.png" %}"/>
+  </div>
+
+  <div class="artiststhumbnail {{active2}}">
+      <img height="100px" src="{% static "dictatorMU/2.png" %}"/>
+  </div>
+</div>
  {% if instructions %}
    {% include instructions %}
  {% endif %}
@@ -13,7 +28,10 @@
 
 
 {% for field in form %}
-    {% formfield field %}
+
+{{field.label|safe}}
+
+    {{field}}
 {% endfor %}
 
 {% next_button %}
