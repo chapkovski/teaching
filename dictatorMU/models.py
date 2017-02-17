@@ -28,7 +28,8 @@ class Constants(BaseConstants):
 class MyFormField(forms.IntegerField):
     def __init__(self, *args, **kwargs):
         super(MyFormField, self).__init__(*args, **kwargs)
-        self.widget = forms.NumberInput(attrs={'class':'form-control'})
+        self.widget = forms.NumberInput(attrs={'class':'form-control','required' : 'required'})
+        # username.widget.attrs['required'] = 'required'
 
 class MyOwnField(models.IntegerField):
     def __init__(self, *args, **kwargs):
