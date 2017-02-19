@@ -4,9 +4,11 @@ from os import environ
 import dj_database_url
 from boto.mturk import qualification
 
+
 import otree.settings
 
-
+# settings.py
+# ROOT_URLCONF = 'urls'
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # the environment variable OTREE_PRODUCTION controls whether Django runs in
@@ -213,4 +215,11 @@ SESSION_CONFIGS = [
 
 # anything you put after the below line will override
 # oTree's default settings. Use with caution.
+# TEMPLATES = [{
+#     'BACKEND': 'django.template.backends.django.DjangoTemplates',
+#     'DIRS': [os.path.join(BASE_DIR, 'templates')],
+# }]
+# print(TEMPLATES)
 otree.settings.augment_settings(globals())
+from  otree.views.demo import DemoIndex
+DemoIndex.template_name = 'new_demo_index.html'
