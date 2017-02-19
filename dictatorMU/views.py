@@ -22,17 +22,18 @@ from django.forms import modelform_factory
 #         self.fields=fields
 #         # print("FEILDS"+str(fields))
 #         return super(MyForm,self).__init__(*args,**kwargs)
-
+from django.forms import ModelForm as mmm
 def MyFormWrapper(model_to_pass,fields_to_pass, *args, **kwargs):
-    class MyForm(otree.forms.ModelForm):
+    class MyForm(mmm):
         class Meta:
             model = model_to_pass
             fields = fields_to_pass
 
         def __init__(self):
-            kwargs.setdefault('label_suffix', '<->')
+            print('SUKA')
+            kwargs.update({'label_suffix': '<->'})
             super(MyForm, self).__init__(*args, **kwargs)
-
+            kwargs.update({'label_suffix': '<->'})
     return MyForm()
 
 
@@ -58,8 +59,8 @@ class MyPage(Page):
         vs = {'form':myform,
             'title': self.title,
             # 'instructions': self.instructions,
-            'active1':self.active1,
-            'active2':self.active2,
+            # 'active1':self.active1,
+            # 'active2':self.active2,
         }
         vs.update(self.extra_vars())
         return vs
@@ -109,7 +110,7 @@ class Results(Page):
 
 li=[]
 for x in range(1, 7):
-    print(models.Player._meta.get_field('ns6_%i' % x).verbose_name)
+    # print(models.Player._meta.get_field('ns6_%i' % x).verbose_name)
 
     globals()['X%i'% x] = type('X%i'% x, (MyPage,), dict(title="Question {}".format(x),
     form_fields = ['ns6_{}'.format(x)]))

@@ -11,27 +11,21 @@
 
 {% endblock %}
 
- {% block content %}
-<div class="pics">
-  <div class="artiststhumbnail {{active1}}">
-      <img height="100px" src="{% static "dictatorMU/1.png" %}"/>
-  </div>
+{% block content %}
+{% for field in form %} 
+    <div class="pics">
+      <div class="artiststhumbnail {% if field.field.active1 %}active{% endif %}" >
+          <img height="100px" src="{% static "dictatorMU/1.png" %}"/>
+      </div>
 
-  <div class="artiststhumbnail {{active2}}">
-      <img height="100px" src="{% static "dictatorMU/2.png" %}"/>
-  </div>
-</div>
- {% if instructions %}
-   {% include instructions %}
- {% endif %}
+      <div class="artiststhumbnail {% if field.field.active2%}active{% endif %}">
+          <img height="100px" src="{% static "dictatorMU/2.png" %}"/>
+      </div>
+    </div>
 
+    {{field.label|safe}}
 
-
-{% for field in form %}
-
-{{field.label|safe}}
-
-    {{field}}
+      {{field}}
 {% endfor %}
 
 {% next_button %}
