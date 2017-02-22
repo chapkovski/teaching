@@ -10,31 +10,33 @@ from django import forms
 
 
 class WP(WaitPage):
-    def  after_all_players_arrive(self):
-        if self.round_number==1:
-            matrix = self.subsession.get_group_matrix()
-            newmatrix = []
-            for g in matrix:
-                activeplayers = []
-                passiveplayers = []
-                for i in g:
-                    if i.participant.vars['loser'] == False :
-                        activeplayers.append(i.id_in_subsession)
-                    else:
-                        passiveplayers.append([i.id_in_subsession])
-                newmatrix.append(activeplayers)
-                newmatrix.extend(passiveplayers)
-                newmatrix=[i for i in newmatrix if i]
-            if newmatrix and len(self.group.get_players())>1:
-                self.subsession.set_group_matrix(newmatrix)
-        else:
-            self.subsession.set_group_matrix(self.subsession.in_round(1).get_group_matrix())
+    def is_displayed(self):
+        return not self.player.participant.vars['loser']
+    # def  after_all_players_arrive(self):
+    #     if self.round_number==1:
+    #         for i in range(1,Constants.num_rounds+1):
+    #             matrix = self.subsession.in_round(i).get_group_matrix()
+    #             newmatrix = []
+    #             for g in matrix:
+    #                 activeplayers = []
+    #                 passiveplayers = []
+    #                 for p in g:
+    #                     if p.participant.vars['loser'] == False :
+    #                         activeplayers.append(p.id_in_subsession)
+    #                     else:
+    #                         passiveplayers.append([p.id_in_subsession])
+    #                 newmatrix.append(activeplayers)
+    #                 newmatrix.extend(passiveplayers)
+    #                 newmatrix=[j for j in newmatrix if j]
+    #             if newmatrix:
+    #                 self.subsession.set_group_matrix(newmatrix)
 
 
 
 
 class Contribute(Page):
-
+    def is_displayed(self):
+        return not self.player.participant.vars['loser']
 
 
     """Player: Choose how much to contribute"""
@@ -44,10 +46,17 @@ class Contribute(Page):
 
     timeout_submission = {'contribution': c(Constants.endowment / 2)}
 
-
+class WP2(WaitPage):
+    def is_displayed(self):
+        return not self.player.participant.vars['loser']
+    def  after_all_players_arrive(self):
+        matrix = self.subsession.get_group_matrix()
+        print('MATRIX:',matrix)
 
 class Results(Page):
     """Players payoff: How much each has earned in this round"""
+    def is_displayed(self):
+        return not self.player.participant.vars['loser']
 
     def vars_for_template(self):
         pass
@@ -55,7 +64,7 @@ class Results(Page):
 page_sequence = [
     WP,
     Contribute,
+    WP2,
 
-    WaitPage,
     Results,
 ]

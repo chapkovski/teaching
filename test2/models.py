@@ -16,7 +16,7 @@ Plus treatments:
 class Constants(BaseConstants):
     name_in_url = 'test2'
     players_per_group =  3
-    num_rounds = 2
+    num_rounds = 3
 
     # """Amount allocated to each player"""
     endowment = c(100)

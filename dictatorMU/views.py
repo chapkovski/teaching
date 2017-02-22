@@ -30,7 +30,6 @@ def MyFormWrapper(model_to_pass,fields_to_pass, *args, **kwargs):
             fields = fields_to_pass
 
         def __init__(self):
-            print('SUKA')
             kwargs.update({'label_suffix': '<->'})
             super(MyForm, self).__init__(*args, **kwargs)
             kwargs.update({'label_suffix': '<->'})
@@ -68,14 +67,37 @@ class MyPage(Page):
     def extra_vars(self):
         return {}
 
+from django.template.defaulttags import register
+@register.filter
+def get_item(dictionary, key):
+    return dictionary.get(key)
 
 
+def guessing_payoff(x,y):
+    diff = abs(x-y)
+    if diff<=Constants.GuessThreshold:
+        return Constants.GuessPayoff
+    else: return 0
+
+def assign_results(player,partner):
+    # part one
+    profit1 = random.choice([player.ns6_4, partner.ns6_4])
+    profit2 = guessing_payoff(partner.ns6_2, player.ns6_3)
+    profit3 = guessing_payoff(partner.ns6_5, player.ns6_6)
+    profit = profit1 + profit2 + profit3
+    return profit
 
 class ResultsWaitPage(WaitPage):
     wait_for_all_groups = True
     def after_all_players_arrive(self):
-        pass
-
+        players = self.subsession.get_players()
+        if len(players)>1:
+            for p in self.subsession.get_players():
+                randomplayer = random.choice([o for o in p.get_others_in_subsession()])
+                p.payoff = assign_results(p,randomplayer)
+        else:
+            myself = self.subsession.get_players()[0]
+            myself.payoff = assign_results(myself,myself)
 
 
 class Results(Page):
@@ -86,8 +108,7 @@ class Results(Page):
 
     def vars_for_template(self):
         allplayers = self.subsession.get_players()
-        allothers = self.player.get_others_in_subsession()
-        randomplayer = random.choice([p for p in allplayers])
+
         all_decisions = [p.kept for p in allplayers]
         all_beliefs = [p.belief for p in allplayers]
         all_norms = [p.norm for p in allplayers]

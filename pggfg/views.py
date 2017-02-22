@@ -58,18 +58,7 @@ class Punishment(Page): #here the decision to detect the TLS is taken
         fields_to_show = ['punishP{}'.format(p.id_in_group) for p in others]
         return fields_to_show
 
-    # def is_displayed(self):
-    #     ps = self.group.get_players()
-    #     howmanyTLC = self.group.numTLCs
-    #     print("AND HOW JE MANY? {}".format(howmanyTLC))
-    #     if howmanyTLC == 0:
-    #         toshow = False
-    #     elif howmanyTLC == 1 and self.player.isTLC:
-    #         toshow = False
-    #     else:
-    #         toshow = True
-    #     return toshow
-    #     # return not self.player.isTLC
+
     """Participants take decision whether to detect the smallest contributor"""
     pass
 

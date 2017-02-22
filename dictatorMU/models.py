@@ -30,7 +30,7 @@ class MyFormField(forms.IntegerField):
         self.active1=active1
         self.active2=active2
         super(MyFormField, self).__init__(*args,  **kwargs)
-        self.widget = forms.NumberInput(attrs={'class':'form-control ','required' : 'required',})
+        self.widget = forms.NumberInput(attrs={'class':'form-control ','required' : 'required','min':0,'max':Constants.endowment})
 
 class MyOwnField(models.IntegerField):
     def __init__(self,*args, **kwargs):
@@ -98,4 +98,12 @@ class Player(BasePlayer):
         <b>I believe receiver B blieves he/she will receive the following share of the {} points from me: </b>""".format(Constants.GuessThreshold,Constants.GuessPayoff, Constants.endowment)
     )
     def set_payoffs(self):
+        #payoff part 1
+        # a
+        #         if len(players)>1:
+        #             for p in self.subsession.get_players():
+        #                 randomplayer = random.choice([o for o in p.get_others_in_subsession()])
+        #
+        #         else:
+        #             randomplayer = self.subsession.get_players()[0]
         self.payoff = (self.kept)

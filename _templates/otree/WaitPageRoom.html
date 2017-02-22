@@ -1,0 +1,72 @@
+{% extends 'otree/WaitPage.html' %}
+{% load i18n %}
+{% load staticfiles %}
+{% block internal_scripts %}
+    {{ block.super }}
+    <!-- this is an HTML file rather than JavaScript static file because context variables need to be passed to it -->
+
+    <script type="text/javascript">
+        function heartbeat() {
+        var args = {
+            type: "GET",
+            url: '{% url "ParticipantRoomHeartbeat" view.tab_unique_id %}',
+            // necessary for IE
+            cache: false
+        };
+        $.ajax(args);
+    }
+
+    var SECOND = 1000;
+    window.setInterval(heartbeat, 10 * SECOND);
+    </script>
+
+ {% endblock %}
+
+ {% block body_main %}
+
+
+<div class="container" style='max-width:970px'>
+    <div class="panel panel-primary">
+<div class="forpadding">
+
+
+                          <img alt='' src='http://www.biostat.uzh.ch/typo3conf/ext/uzh_cd_template/Resources/Public/Images/uzh_logo_e_pos.svg'  />
+                          <div class='wrapper_rand'>
+                               <H3>Experimental games for Social Norms course</H3>
+
+
+                          </div>
+</div>
+
+
+        </div>
+    </div>
+
+</div>
+
+      {{ block.super }}
+ {% endblock %}
+
+ {% block styles %}
+   <style type="text/css">
+   .forpadding{padding:10px;}
+    img, .wrapper_rand {
+        display: inline-block;
+         word-wrap: break-word;
+        vertical-align: middle;
+
+    }
+    .wrapper_rand {
+        width: calc(100% - 300px);
+           text-align: center;
+    }
+    img {
+        width:256px;
+    }
+    @media only screen and (max-device-width: 480px) {
+     .wrapper_rand { display:inline; }
+    img  { display:block; margin: 0 auto;
+    margin-left:auto;;}
+    }
+ </style>
+ {% endblock %}
