@@ -81,6 +81,7 @@ def guessing_payoff(x,y):
 
 def assign_results(player,partner):
     # part one
+
     profit1 = random.choice([player.ns6_4, partner.ns6_4])
     profit2 = guessing_payoff(partner.ns6_2, player.ns6_3)
     profit3 = guessing_payoff(partner.ns6_5, player.ns6_6)
@@ -113,15 +114,35 @@ class Results(Page):
 
         allplayers = self.subsession.get_players()
         alldata=[]
+        descriptions=['Moral norm: what Sender should do?',
+                      'Moral norm: what Receiver should expect?',
+                      'Normative expectations: what others expect you to do',
+                      'Your decision as Sender',
+                      'Empirical expectations regarding Sender',
+                      'Empirical expectations regarding Receiver',
+        ]
         for i in range(1,7):
             tempdict = {}
             tempdict['name']='ns6_{}'.format(i)
+            tempdict['description']=descriptions[i-1]
             tempdict['data'] = [getattr(p, tempdict['name']) for p in allplayers]
-            tempdict['average'] = sum(tempdict['data'])/len(tempdict['data'])
+            tempdict['average'] = round(sum(tempdict['data'])/len(tempdict['data']),1)
             tempdict['you'] = int(getattr( self.player,tempdict['name']))
             tempdict['data'] = safe_json(tempdict['data'])
             alldata.append(tempdict)
-        # print(safe_json(alldata))
+        #  role 
+         #
+        #  payoff1
+        #  normguess
+         #
+        #  normvalue
+        #  payoff2
+         #
+        #  normguess
+        #  normvalue
+         #
+        #  payoff2
+
         return{'data':alldata}
 
 

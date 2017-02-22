@@ -1,19 +1,77 @@
 {% extends "global/Base.html" %}
 {% load staticfiles otree_tags %}
-
+{% load i18n %}
 {% block title %}
     Results
 {% endblock %}
 
 {% block content %}
-<table>
+<!--
+<div class="panel panel-success">
+  <div class="panel-heading">Your payoff</div>
+  <div class="panel-body"><table class="table">
+
+    <tbody>
+      <tr>
+        <td>You are paid as:</td>
+        <td>{{role}}</td>
+
+      </tr>
+      <tr class="success">
+        <td>Your earnings as {{role}}:</td>
+        <td>{{payoff1}}</td>
+
+      </tr>
+      <tr class="danger">
+        <td>Your normative expectations guess:</td>
+        <td>{{normguess}}</td>
+
+      </tr>
+      <tr class="info">
+        <td>Real choice of your partner:</td>
+        <td>{{normvalue}}</td>
+
+      </tr>
+      <tr class="warning">
+        <td>Your earnings from normative guess:</td>
+        <td>{{payoff2}}</td>
+
+      </tr>
+      <tr class="danger">
+        <td>Your normative expectations guess:</td>
+        <td>{{normguess}}</td>
+
+      </tr>
+      <tr class="info">
+        <td>Real choice of your partner:</td>
+        <td>{{normvalue}}</td>
+
+      </tr>
+      <tr class="warning">
+        <td>Your earnings from normative guess:</td>
+        <td>{{payoff2}}</td>
+
+      </tr>
+      <tr class="danger">
+        <td>Your final payoff:</td>
+        <td>{{player.payoff}}</td>
+
+      </tr>
+    </tbody>
+  </table></div>
+</div> -->
+
+  <table class="table table-striped">
+    <tr>
+        <th>Question</th><th>Your decision</th><th>Average decision</th>
+    </tr>
 {% for i in data %}
 
 <tr>
-    <td>{{i.name}}</td>
+    <td>{{i.description}}</td>
     <td>{{i.you}}</td>
     <td>{{i.average}}</td>
-    <td>{{i.data}}</td>
+
 </tr>
 
  {% endfor %}
@@ -242,11 +300,11 @@ $(function() {
       chart_{{i.name}} = $('#container_{{i.name}}').highcharts({
 
                title: {
-              text: '{{i.name}}' // Title for the chart
+              text: '{{i.description}}' // Title for the chart
           },
           plotOptions: {
             series: {
-      color: Highcharts.getOptions().colors[1]
+      color: Highcharts.getOptions().colors[{{forloop.counter}}]
 
             }},
         });
@@ -274,7 +332,7 @@ $(function() {
           width: 2,
           color: 'green',
           zIndex: 8,
-          label: {text:'Your choice: {{i.you}}',}
+          label: {text:'Your choice: {{i.you}}',verticalAlign: "middle"}
         });
     {% endfor %}
     // });
