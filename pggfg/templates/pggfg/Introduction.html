@@ -1,1 +1,0 @@
-{% extends "global/Base.html" %}{% load staticfiles otree_tags %}{% block title %}    Introduction{% endblock %}{% block content %}{% for field in form %}    {% formfield field %}{% endfor %}    {% include Constants.instructions_template %}    {% next_button %}{% endblock %}
