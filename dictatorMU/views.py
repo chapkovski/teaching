@@ -66,7 +66,7 @@ class MyPage(Page):
 
     def extra_vars(self):
         return {}
-
+# registering tag filter to refer to participant.var label
 from django.template.defaulttags import register
 @register.filter
 def get_item(dictionary, key):
@@ -103,29 +103,26 @@ class ResultsWaitPage(WaitPage):
 class Results(Page):
     def is_displayed(self):
         return self.round_number == Constants.num_rounds
-    def offer(self):
-        return Constants.endowment - self.player.kept
 
+
+
+    # def offer(self):
+    #     return Constants.endowment - self.player.kept
+    #
     def vars_for_template(self):
+
         allplayers = self.subsession.get_players()
-
-        all_decisions = [p.kept for p in allplayers]
-        all_beliefs = [p.belief for p in allplayers]
-        all_norms = [p.norm for p in allplayers]
-        all_others_beliefs = [p.others_belief for p in allplayers]
-
-
-        return {
-            'all_decisions':safe_json(all_decisions),
-            'all_beliefs':safe_json(all_beliefs),
-            'all_norms':safe_json(all_norms),
-            'all_others_beliefs':safe_json(all_others_beliefs),
-            'average_decision':sum(all_decisions)/len(all_decisions),
-            'average_belief':sum(all_beliefs)/len(all_beliefs),
-            'average_norm':sum(all_norms)/len(all_norms),
-            'average_others_belief':sum(all_others_beliefs)/len(all_others_beliefs),
-        }
-
+        alldata=[]
+        for i in range(1,7):
+            tempdict = {}
+            tempdict['name']='ns6_{}'.format(i)
+            tempdict['data'] = [getattr(p, tempdict['name']) for p in allplayers]
+            tempdict['average'] = sum(tempdict['data'])/len(tempdict['data'])
+            tempdict['you'] = int(getattr( self.player,tempdict['name']))
+            tempdict['data'] = safe_json(tempdict['data'])
+            alldata.append(tempdict)
+        # print(safe_json(alldata))
+        return{'data':alldata}
 
 
 
