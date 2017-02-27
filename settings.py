@@ -211,12 +211,12 @@ SESSION_CONFIGS = [
     #     'num_demo_participants': 1,
     #     'app_sequence': ['pggfg_demo'],
     # },
-    # {
-    #     'name': 'test',
-    #     'display_name': "test",
-    #     'num_demo_participants': 3,
-    #     'app_sequence': ['test' ,'test2'],
-    # },
+    {
+        'name': 'test',
+        'display_name': "test",
+        'num_demo_participants': 1,
+        'app_sequence': ['test'],
+    },
 ]
 
 # anything you put after the below line will override
