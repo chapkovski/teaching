@@ -140,12 +140,12 @@ SESSION_CONFIG_DEFAULTS = {
 
 # from colsan.models.Constants import players_per_group
 SESSION_CONFIGS = [
-    {
-        'name': 'dictatorMU',
-        'display_name': "Session 1. Dictator Game + beliefs",
-        'num_demo_participants': 1,
-        'app_sequence': ['dictatorMU'],
-    },
+    # {
+    #     'name': 'dictatorMU',
+    #     'display_name': "Session 1. Dictator Game + beliefs",
+    #     'num_demo_participants': 1,
+    #     'app_sequence': ['dictatorMU'],
+    # },
     #
     # {
     #     'name': 'pgg',
@@ -211,11 +211,17 @@ SESSION_CONFIGS = [
     #     'num_demo_participants': 1,
     #     'app_sequence': ['pggfg_demo'],
     # },
+    # {
+    #     'name': 'test',
+    #     'display_name': "test",
+    #     'num_demo_participants': 1,
+    #     'app_sequence': ['test'],
+    # },
     {
-        'name': 'test',
-        'display_name': "test",
+        'name': 'dictatorMU',
+        'display_name': "Session 1. Dictator Game + beliefs",
         'num_demo_participants': 1,
-        'app_sequence': ['test'],
+        'app_sequence': ['dictatorMU'],
     },
 ]
 
