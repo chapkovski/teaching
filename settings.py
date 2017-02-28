@@ -29,7 +29,8 @@ SECRET_KEY = 'l&3%$it4n+o-cdwopdtra=hm96a)7ee2s@i4v_*638q4d)==t4'
 
 DATABASES = {
     'default': dj_database_url.config(
-        default='sqlite:///' + os.path.join(BASE_DIR, 'db.sqlite3')
+        default='postgres://otree_user:basset@localhost/django_db'
+        # 'sqlite:///' + os.path.join(BASE_DIR, 'db.sqlite3')
     )
 }
 

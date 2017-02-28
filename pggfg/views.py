@@ -15,14 +15,15 @@ class PunishmentForm(forms.Form):
     def __init__(self, fields_to_add, *args, **kwargs):
         super(PunishmentForm, self).__init__(*args, **kwargs)
 
-        CHOICES = (("True", True), ("False",False) )
+        # CHOICES = (("True", True), ("False", False))
         for f in fields_to_add:
-            self.fields[f] =forms.CharField(widget=forms.Select(choices=CHOICES),)
+            self.fields[f] = forms.IntegerField()
 
 
 class Introduction(Page):
     """Description of the game: How to play and returns expected"""
-    pass
+    def before_next_page(self):
+        self.group.testmatrix = [[1,2,3],[1,2,3],[1,2,3]]
 
 
 class Contribute(Page):
@@ -34,11 +35,13 @@ class Contribute(Page):
     timeout_submission = {'contribution': c(Constants.endowment / 2)}
 
 
+
+
 class ContributionWaitPage(WaitPage):
     """Waiting till all players make their decisions about the contribution"""
-    def after_all_players_arrive(self):
-        self.group.detect_TLC()
-        self.group.set_payoffs()
+    # def after_all_players_arrive(self):
+        # self.group.detect_TLC()
+        # self.group.set_payoffs()
 
     body_text = "Waiting for other participants to contribute."
 
@@ -48,6 +51,7 @@ class Punishment(Page):
     form_model = models.Player
 
     def vars_for_template(self):
+
         others = self.player.get_others_in_group()
         contribs_to_show = [p.contribution for p in others]
         verbose_names = ['Participant {}'.format(p.id_in_group)
@@ -64,13 +68,25 @@ class Punishment(Page):
         return fields_to_show
 
     """Participants take decision whether to detect the smallest contributor"""
-    pass
+    def before_next_page(self):
+        punishmentvector = []
+        for i in range(Constants.players_per_group):
+            f = self.player._meta.get_field("punishP{}".format(i+1))
+            punishmentvector.append(getattr(self.player, f.name) or 0)
+
+        curpunishmentmatrix = list(self.group.punishmentmatrix)
+        curpunishmentmatrix[self.player.id_in_group-1] = punishmentvector
+        self.group.punishmentmatrix = curpunishmentmatrix
 
 
 class PunishmentWaitPage(WaitPage):
     """Waiting for the group to finish the punishment stage before
     showing them results"""
-    pass
+    def after_all_players_arrive(self):
+        for p in self.group.get_players():
+            p.punishment_sent = sum(self.group.punishmentmatrix[p.id_in_group-1])
+            p.punishment_received = sum(row[p.id_in_group-1]
+                                        for row in self.group.punishmentmatrix)
 
 
 class Results(Page):
@@ -129,18 +145,16 @@ class FinalResults(Page):
         series.append({
             'name': 'all players',
             'type': 'scatter',
-            'data': [list (a) for a in zip(round_nums,contribs)]})
+            'data': [list(a) for a in zip(round_nums, contribs)]})
 
         highcharts_series = safe_json(series)
 
-        return {'allcontribstable':allcontribstable,
-                'groupcontribs':mygroupcontribs,
-                'personcontribs':personcontribs,
+        return {'allcontribstable': llcontribstable,
+                'groupcontribs': mygroupcontribs,
+                'personcontribs': personcontribs,
                 'round_numbers': round_numbers,
                 'highcharts_series': highcharts_series,
-        }
-
-
+                }
 
 
 page_sequence = [

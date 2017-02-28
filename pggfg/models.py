@@ -3,7 +3,9 @@ from otree.api import (
     Currency as c, currency_range
 )
 import random
-from settings import SESSION_CONFIGS
+# from settings import SESSION_CONFIGS
+from django.contrib.postgres.fields import ArrayField
+
 
 doc = """
 public good game with some variations depending on session configs:
@@ -24,6 +26,11 @@ class Constants(BaseConstants):
 
 
 class Subsession(BaseSubsession):
+    def before_session_starts(self):
+        for g in self.get_groups():
+            g.punishmentmatrix = [[0 for i in self.get_players()]
+                                  for i in self.get_players()]
+
     def vars_for_admin_report(self):
         contributions = [p.contribution for p in self.get_players()
                          if p.contribution is not None]
@@ -38,6 +45,15 @@ class Group(BaseGroup):
     total_contribution = models.IntegerField()
     average_contribution = models.FloatField()
     individual_share = models.CurrencyField()
+    punishmentmatrix = ArrayField(
+        ArrayField(
+            models.IntegerField(),
+            size=Constants.players_per_group,
+            null=True,
+        ),
+        size=Constants.players_per_group,
+        null=True,
+    )
 
     def set_payoffs(self):
         self.total_contribution = sum([p.contribution for p in self.get_players()])
@@ -50,16 +66,16 @@ class Group(BaseGroup):
 
 
 class Player(BasePlayer):
+    punishment_sent = models.IntegerField()
+    punishment_received = models.IntegerField()
     contribution = models.PositiveIntegerField(
         min=0, max=Constants.endowment,
         doc="""The amount contributed by the player""",
     )
 for i in range(Constants.players_per_group):
     Player.add_to_class("punishP{}".format(i+1),
-        models.BooleanField(
-            verbose_name="Participant {}".format(i+1)
+        models.IntegerField(
+            verbose_name="Participant {}".format(i+1),
+            min=0,
+            max=Constants.endowment,
         ))
-
-# for key in Constants.mydict:
-#
-#         verbose_name="Player {}".format(i+1))
