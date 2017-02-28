@@ -25,6 +25,11 @@ class Constants(BaseConstants):
     endowment = 100
     GuessThreshold = 3
     GuessPayoff = 20
+    descriptions = ['Personal normative belief',
+                    'Normative expectation',
+                    'Empirical expectation',
+                    'Normative behaviour',
+                    ]
 
 class MyFormField(forms.IntegerField):
     def __init__(self,active1=False,active2=False,*args, **kwargs):
@@ -44,43 +49,38 @@ class MyOwnField(models.IntegerField):
         kwargs['min'] = 0
         super(MyOwnField, self).__init__(*args, **kwargs)
 
-
     def formfield(self, **kwargs):
-        defaults = {'form_class': MyFormField,'active1':self.active1, 'active2':self.active2}
+        defaults = {'form_class': MyFormField,
+                    'active1': self.active1,
+                    'active2': self.active2}
         defaults.update(kwargs)
         return super().formfield(**defaults)
 
 
 class Subsession(BaseSubsession):
     def vars_for_admin_report(self):
-
         allplayers = self.get_players()
-        alldata=[]
-        descriptions=['Personal norm about giving',
-                      'Personal norm about receiving',
-                      'Normative expectation of sender',
-                      'Norm',
-                      'Empirical expectations',
-                      'Second-order empirical expectations ',
-        ]
-        for i in range(1,7):
+        alldata = []
+        descriptions = Constants.descriptions
+        for i in range(1, 5):
             tempdict = {}
-            tempdict['name']='ns6_{}'.format(i)
-            tempdict['description']=descriptions[i-1]
-            tempdict['data'] = [getattr(p, tempdict['name']) for p in allplayers]
+            tempdict['name'] = 'ns6_{}'.format(i)
+            tempdict['description'] = descriptions[i-1]
+            tempdict['data'] = [getattr(p, tempdict['name'])
+                                for p in allplayers]
             try:
-                tempdict['average'] = round(sum(tempdict['data'])/len(tempdict['data']),1)
+                tempdict['average'] = round(sum(tempdict['data']) /
+                                            len(tempdict['data']), 1)
             except:
-                tempdict['average']='no data yet'
+                tempdict['average'] = 'no data yet'
             tempdict['data'] = safe_json(tempdict['data'])
             alldata.append(tempdict)
-
-
-        return{'data':alldata}
+        return{'data': alldata}
 
 
 class Group(BaseGroup):
     pass
+
 
 class Player(BasePlayer):
     myrole = models.CharField()
@@ -89,52 +89,18 @@ class Player(BasePlayer):
     profit3 = models.FloatField()
     profit4 = models.FloatField()
     ns6_1 = MyOwnField(
-        active1=True,
-        active2=False,
-        verbose_name="""What do you believe a sender should give? <br>
-        <b>I believe it is morally appropriate to give the following share of the %i points to receiver B: </b>"""% Constants.endowment
+        verbose_name="A sender should give the following share",
+        doc="""Personal normative belief"""
     )
     ns6_2 = MyOwnField(
-        active1=False,
-        active2=True,
-        verbose_name="""Imagine you are the receiver: what would you morally expect from the sender? <br>
-        <b>I believe it is morally appropriate to receive the following share of the %i points to sender A: </b>"""% Constants.endowment
-
+        verbose_name="The receiver expects the following share",
+        doc="""Normative expectation"""
     )
     ns6_3 = MyOwnField(
-        active1=True,
-        active2=False,
-        verbose_name="""Now put yourself in the shoes of the other receiver: what do you think the receiver morally expects from you? <br>
-        If you hit receiver B's actual answer to Questin2 by +/- {} points, you will receive {} points. <br>
-        <b>I think receiver B believes it is morally appropriate to receive the following share of the {} points from me: </b>""".format(Constants.GuessThreshold,Constants.GuessPayoff, Constants.endowment)
+        verbose_name="Most senders give the following share",
+        doc="""Empirical expectation"""
     )
     ns6_4 = MyOwnField(
-        active1=True,
-        active2=False,
-        verbose_name="""What is your decision as a sender? <br>
-        <b>I will give the following share of the %i points to receiver B: </b>"""% Constants.endowment
+        verbose_name="I give the following share",
+        doc="""Normative behaviour""",
     )
-    ns6_5 = MyOwnField(
-        active1=False,
-        active2=True,
-        verbose_name="""Imagine you are the receiver: what would you actually expect the sender to decide?<br>
-        If you hit sender A's actual answer by +/- {} points, you will recieve {}points.<br>
-        <b>I believe sender A will give the following share of the {} points to me: </b>""".format(Constants.GuessThreshold,Constants.GuessPayoff, Constants.endowment)
-    )
-    ns6_6 = MyOwnField(
-        active1=True,
-        # active2=False,
-        verbose_name="""Now put yourself in the showes of the other receiver: how do you think the receiver expects you actually to decide?<br>
-        If you hit receiver B's actual answer by +/- {} points, you will receive {} points.<br>
-        <b>I believe receiver B blieves he/she will receive the following share of the {} points from me: </b>""".format(Constants.GuessThreshold,Constants.GuessPayoff, Constants.endowment)
-    )
-    def set_payoffs(self):
-        #payoff part 1
-        # a
-        #         if len(players)>1:
-        #             for p in self.subsession.get_players():
-        #                 randomplayer = random.choice([o for o in p.get_others_in_subsession()])
-        #
-        #         else:
-        #             randomplayer = self.subsession.get_players()[0]
-        self.payoff = (self.kept)
