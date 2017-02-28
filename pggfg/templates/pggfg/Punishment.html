@@ -18,6 +18,7 @@
     text-align: center;
     vertical-align: middle;
   }
+  .form-control {display:inline!important;}
   </style>
 {% endblock %}
 
@@ -46,13 +47,14 @@
     <tr>
         <td>
             {{ ab.2 }}
-            {{ ab.0.errors }}
+
         </td><td >{{ ab.1}}</td>
-        <td>{{ ab.0}}</td>
+  </td>
+        <td><input autofocus="autofocus" class="form-control " id="id_{{ab.0.name}}" max="100.00" min="0" name="{{ab.0.name}}" required="required" type="number"></td>
 
     </tr>
     {% endfor %}
-    {{ form.errors }}.
+
 </table>
 
 

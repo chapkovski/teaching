@@ -5,7 +5,7 @@ from otree.api import (
 import random
 # from settings import SESSION_CONFIGS
 from django.contrib.postgres.fields import ArrayField
-
+from django import forms
 
 doc = """
 public good game with some variations depending on session configs:
@@ -63,19 +63,28 @@ class Group(BaseGroup):
             p.payoff = (Constants.endowment - p.contribution) + self.individual_share
 
 
-
-
 class Player(BasePlayer):
     punishment_sent = models.IntegerField()
     punishment_received = models.IntegerField()
     contribution = models.PositiveIntegerField(
         min=0, max=Constants.endowment,
         doc="""The amount contributed by the player""",
+        widget=forms.NumberInput(attrs={'class': 'form-control ',
+                                        'required': 'required',
+                                        'min': 0, 'max': Constants.endowment,
+                                        'autofocus': 'autofocus', })
     )
+
+
 for i in range(Constants.players_per_group):
     Player.add_to_class("punishP{}".format(i+1),
-        models.IntegerField(
+                        models.IntegerField(
             verbose_name="Participant {}".format(i+1),
             min=0,
             max=Constants.endowment,
+            widget=forms.NumberInput(attrs={'class': 'form-control ',
+                                            'required': 'required',
+                                            'min': 0,
+                                            'max': Constants.endowment,
+                                            'autofocus': 'autofocus', })
         ))
