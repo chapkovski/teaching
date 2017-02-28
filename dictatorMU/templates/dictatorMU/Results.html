@@ -6,62 +6,10 @@
 {% endblock %}
 
 {% block content %}
-<!--
-<div class="panel panel-success">
-  <div class="panel-heading">Your payoff</div>
-  <div class="panel-body"><table class="table">
 
-    <tbody>
-      <tr>
-        <td>You are paid as:</td>
-        <td>{{role}}</td>
+</div>
 
-      </tr>
-      <tr class="success">
-        <td>Your earnings as {{role}}:</td>
-        <td>{{payoff1}}</td>
-
-      </tr>
-      <tr class="danger">
-        <td>Your normative expectations guess:</td>
-        <td>{{normguess}}</td>
-
-      </tr>
-      <tr class="info">
-        <td>Real choice of your partner:</td>
-        <td>{{normvalue}}</td>
-
-      </tr>
-      <tr class="warning">
-        <td>Your earnings from normative guess:</td>
-        <td>{{payoff2}}</td>
-
-      </tr>
-      <tr class="danger">
-        <td>Your normative expectations guess:</td>
-        <td>{{normguess}}</td>
-
-      </tr>
-      <tr class="info">
-        <td>Real choice of your partner:</td>
-        <td>{{normvalue}}</td>
-
-      </tr>
-      <tr class="warning">
-        <td>Your earnings from normative guess:</td>
-        <td>{{payoff2}}</td>
-
-      </tr>
-      <tr class="danger">
-        <td>Your final payoff:</td>
-        <td>{{player.payoff}}</td>
-
-      </tr>
-    </tbody>
-  </table></div>
-</div> -->
-
-  <table class="table table-striped">
+  <table class="table table-striped table-hover">
     <tr>
         <th>Question</th><th>Your decision</th><th>Average decision</th>
     </tr>
@@ -79,8 +27,48 @@
 
 
 {% for i in data %}
-    <div id="container_{{i.name}}" style="width:80%;height:350px;margin:1.5em 1em;"></div>
+    <div id="container_{{i.name}}" style="width:80%;height:450px;margin:1.5em 1em;"></div>
 {% endfor %}
+
+<div class="panel panel-success">
+  <div class="panel-heading">Your payoff</div>
+  <div class="panel-body"><table class="table">
+
+    <tbody>
+      <tr>
+        <td>You are paid as:</td>
+        <td><strong>{{player.myrole}}</strong></td>
+
+      </tr>
+      <tr class="">
+        <td>Your earnings as {{player.myrole}}:</td>
+        <td>{{player.profit1}}</td>
+
+      </tr>
+      <tr class="">
+        <td>Your earnings from guessing the normative expectations:</td>
+        <td>{{player.profit2}}</td>
+
+      </tr>
+      <tr class="">
+        <td>Your earnings from guessing the normative behaviour:</td>
+        <td>{{player.profit3}}</td>
+
+      </tr>
+      <tr class="">
+        <td>Your earnings from guessing the empirical expectations:</td>
+        <td>{{player.profit4}}</td>
+
+      </tr>
+
+
+      <tr class="danger">
+        <td>Your final payoff:</td>
+        <td>{{player.payoff}}</td>
+
+      </tr>
+    </tbody>
+  </table></div>
 
 {% next_button %}
 
@@ -99,7 +87,7 @@
    colors: [
      'rgba( 0,   154, 253, 0.9 )', //bright blue
      'rgba( 253, 99,  0,   0.9 )', //bright orange
-     'rgba( 40,  40,  56,  0.9 )', //dark
+    //  'rgba( 40,  40,  56,  0.9 )', //dark
      'rgba( 253, 0,   154, 0.9 )', //bright pink
      'rgba( 154, 253, 0,   0.9 )', //bright green
      'rgba( 145, 44,  138, 0.9 )', //mid purple
@@ -120,7 +108,7 @@
     //  backgroundColor:'rgba(204,204,204,.25)',
     //  plotBackgroundColor:'rgba(255,255,255,1)',
      style: {
-       fontFamily: 'Abel,serif'
+      //  fontFamily: 'Abel,serif'
      }
    },
    title: {
@@ -253,7 +241,9 @@
      lineColor: 'rgba(0,0,0,.5)',
      tickWidth: .5,
      tickLength: 3,
-     tickColor: 'rgba(0,0,0,.75)'
+     tickColor: 'rgba(0,0,0,.75)',
+     min:0,
+     max:{{Constants.endowment}},
    },
    yAxis: {
      minPadding: 0,
@@ -323,16 +313,16 @@ $(function() {
         width: 2,
         color: 'green',
         zIndex: 8,
-        label: {text:'Average',}
+        label: {text:'<b>Average</b>',useHTML:true}
       });
 
 
         chart_{{i.name}}.xAxis[0].addPlotLine({
           value: {{i.you}},
           width: 2,
-          color: 'green',
+          color: 'red',
           zIndex: 8,
-          label: {text:'Your choice: {{i.you}}',verticalAlign: "middle"}
+          label: {text:'<b>Your choice: {{i.you}}</b>',verticalAlign: "middle",useHTML:true}
         });
     {% endfor %}
     // });

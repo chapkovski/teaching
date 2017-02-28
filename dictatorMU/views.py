@@ -37,7 +37,14 @@ def MyFormWrapper(model_to_pass,fields_to_pass, *args, **kwargs):
 
 
 
+class Introduction(Page):
+    pass
+    # def __init__(self, classtype):
+    #     self._type = classtype
+    #     self.__name__ ='pidor'
 
+    # form_model = models.Player
+    # template_name = 'dictatorMU/Intro.html'
 
 class MyPage(Page):
     # def __init__(self, classtype):
@@ -77,15 +84,24 @@ def guessing_payoff(x,y):
     diff = abs(x-y)
     if diff<=Constants.GuessThreshold:
         return Constants.GuessPayoff
-    else: return 0
+    else:
+        return 0
 
 def assign_results(player,partner):
     # part one
+    sender = random.choice([True, False])
+    if sender:
+        player.myrole='Sender'
+        player.profit1 = Constants.endowment-player.ns6_4
+    else:
+        player.myrole='Receiver'
+        player.profit1 = partner.ns6_4
 
-    profit1 = random.choice([player.ns6_4, partner.ns6_4])
-    profit2 = guessing_payoff(partner.ns6_2, player.ns6_3)
-    profit3 = guessing_payoff(partner.ns6_5, player.ns6_6)
-    profit = profit1 + profit2 + profit3
+    player.profit2 = guessing_payoff(partner.ns6_2, player.ns6_3) #normative expectations guesing
+    player.profit3 = guessing_payoff(partner.ns6_4, player.ns6_5) # behaviour guissing
+    player.profit4 = guessing_payoff(partner.ns6_5, player.ns6_6) # empirical expectaion guessing
+    profit = player.profit1 + player.profit2 + player.profit3 +player.profit4
+    print('PROFIT:  ',profit)
     return profit
 
 class ResultsWaitPage(WaitPage):
@@ -114,12 +130,12 @@ class Results(Page):
 
         allplayers = self.subsession.get_players()
         alldata=[]
-        descriptions=['Moral norm: what Sender should do?',
-                      'Moral norm: what Receiver should expect?',
-                      'Normative expectations: what others expect you to do',
-                      'Your decision as Sender',
-                      'Empirical expectations regarding Sender',
-                      'Empirical expectations regarding Receiver',
+        descriptions=['Personal norm about giving',
+                      'Personal norm about receiving',
+                      'Normative expectation of sender',
+                      'Norm',
+                      'Empirical expectations',
+                      'Second-order empirical expectations ',
         ]
         for i in range(1,7):
             tempdict = {}
@@ -130,7 +146,7 @@ class Results(Page):
             tempdict['you'] = int(getattr( self.player,tempdict['name']))
             tempdict['data'] = safe_json(tempdict['data'])
             alldata.append(tempdict)
-        #  role 
+        #  role
          #
         #  payoff1
         #  normguess
@@ -147,7 +163,7 @@ class Results(Page):
 
 
 
-li=[]
+li=[Introduction]
 for x in range(1, 7):
     # print(models.Player._meta.get_field('ns6_%i' % x).verbose_name)
 

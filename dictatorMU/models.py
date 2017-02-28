@@ -3,6 +3,7 @@ from otree.api import (
     Currency as c, currency_range
 )
 import random
+from otree.common import safe_json
 from django import forms
 
 doc = """
@@ -21,7 +22,7 @@ class Constants(BaseConstants):
     name_in_url = 'dictatorMU'
     players_per_group = None
     num_rounds = 1
-    endowment = 10
+    endowment = 100
     GuessThreshold = 3
     GuessPayoff = 20
 
@@ -30,7 +31,10 @@ class MyFormField(forms.IntegerField):
         self.active1=active1
         self.active2=active2
         super(MyFormField, self).__init__(*args,  **kwargs)
-        self.widget = forms.NumberInput(attrs={'class':'form-control ','required' : 'required','min':0,'max':Constants.endowment})
+        self.widget = forms.NumberInput(attrs={'class':'form-control ',
+        'required' : 'required',
+        'min':0,'max':Constants.endowment,
+        'autofocus' : 'autofocus',})
 
 class MyOwnField(models.IntegerField):
     def __init__(self,*args, **kwargs):
@@ -49,43 +53,70 @@ class MyOwnField(models.IntegerField):
 
 class Subsession(BaseSubsession):
     def vars_for_admin_report(self):
-        payoffs = sorted([p.payoff for p in self.get_players()])
-        return {'payoffs': payoffs}
+
+        allplayers = self.get_players()
+        alldata=[]
+        descriptions=['Personal norm about giving',
+                      'Personal norm about receiving',
+                      'Normative expectation of sender',
+                      'Norm',
+                      'Empirical expectations',
+                      'Second-order empirical expectations ',
+        ]
+        for i in range(1,7):
+            tempdict = {}
+            tempdict['name']='ns6_{}'.format(i)
+            tempdict['description']=descriptions[i-1]
+            tempdict['data'] = [getattr(p, tempdict['name']) for p in allplayers]
+            try:
+                tempdict['average'] = round(sum(tempdict['data'])/len(tempdict['data']),1)
+            except:
+                tempdict['average']='no data yet'
+            tempdict['data'] = safe_json(tempdict['data'])
+            alldata.append(tempdict)
+
+
+        return{'data':alldata}
 
 
 class Group(BaseGroup):
     pass
 
 class Player(BasePlayer):
+    myrole = models.CharField()
+    profit1 = models.FloatField()
+    profit2 = models.FloatField()
+    profit3 = models.FloatField()
+    profit4 = models.FloatField()
     ns6_1 = MyOwnField(
-    active1=True,
-    active2=False,
+        active1=True,
+        active2=False,
         verbose_name="""What do you believe a sender should give? <br>
         <b>I believe it is morally appropriate to give the following share of the %i points to receiver B: </b>"""% Constants.endowment
     )
     ns6_2 = MyOwnField(
-        active1=True,
-        # active2=False,
+        active1=False,
+        active2=True,
         verbose_name="""Imagine you are the receiver: what would you morally expect from the sender? <br>
         <b>I believe it is morally appropriate to receive the following share of the %i points to sender A: </b>"""% Constants.endowment
 
     )
     ns6_3 = MyOwnField(
         active1=True,
-        # active2=False,
+        active2=False,
         verbose_name="""Now put yourself in the shoes of the other receiver: what do you think the receiver morally expects from you? <br>
         If you hit receiver B's actual answer to Questin2 by +/- {} points, you will receive {} points. <br>
         <b>I think receiver B believes it is morally appropriate to receive the following share of the {} points from me: </b>""".format(Constants.GuessThreshold,Constants.GuessPayoff, Constants.endowment)
     )
     ns6_4 = MyOwnField(
         active1=True,
-        # active2=False,
+        active2=False,
         verbose_name="""What is your decision as a sender? <br>
         <b>I will give the following share of the %i points to receiver B: </b>"""% Constants.endowment
     )
     ns6_5 = MyOwnField(
-        active1=True,
-        # active2=False,
+        active1=False,
+        active2=True,
         verbose_name="""Imagine you are the receiver: what would you actually expect the sender to decide?<br>
         If you hit sender A's actual answer by +/- {} points, you will recieve {}points.<br>
         <b>I believe sender A will give the following share of the {} points to me: </b>""".format(Constants.GuessThreshold,Constants.GuessPayoff, Constants.endowment)

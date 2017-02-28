@@ -7,12 +7,12 @@
 {% endblock %}
 {% block title %}
 
-{{title}} {{active2}}
+{{title}} 
 
 {% endblock %}
 
 {% block content %}
-{% for field in form %} 
+{% for field in form %}
     <div class="pics">
       <div class="artiststhumbnail {% if field.field.active1 %}active{% endif %}" >
           <img height="100px" src="{% static "dictatorMU/1.png" %}"/>
@@ -22,11 +22,11 @@
           <img height="100px" src="{% static "dictatorMU/2.png" %}"/>
       </div>
     </div>
-
+<p></p>
     {{field.label|safe}}
 
       {{field}}
 {% endfor %}
-
+<p></p><p></p>
 {% next_button %}
 {% endblock %}
