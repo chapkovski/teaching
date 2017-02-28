@@ -22,8 +22,8 @@ class PunishmentForm(forms.Form):
 
 class Introduction(Page):
     """Description of the game: How to play and returns expected"""
-    def before_next_page(self):
-        self.group.testmatrix = [[1,2,3],[1,2,3],[1,2,3]]
+    def is_displayed(self):
+        return self.subsession.round_number == 1
 
 
 class Contribute(Page):
