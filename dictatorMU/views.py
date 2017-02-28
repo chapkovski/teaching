@@ -111,23 +111,20 @@ class Results(Page):
     def is_displayed(self):
         return self.round_number == Constants.num_rounds
 
-
-
-    # def offer(self):
-    #     return Constants.endowment - self.player.kept
-    #
     def vars_for_template(self):
 
         allplayers = self.subsession.get_players()
         alldata = []
         descriptions = Constants.descriptions
-        for i in range(1,5):
+        for i in range(1, 5):
             tempdict = {}
-            tempdict['name']='ns6_{}'.format(i)
-            tempdict['description']=descriptions[i-1]
-            tempdict['data'] = [getattr(p, tempdict['name']) for p in allplayers]
-            tempdict['average'] = round(sum(tempdict['data'])/len(tempdict['data']),1)
-            tempdict['you'] = int(getattr( self.player,tempdict['name']))
+            tempdict['name'] = 'ns6_{}'.format(i)
+            tempdict['description'] = descriptions[i-1]
+            tempdict['data'] = [getattr(p, tempdict['name'])
+                                for p in allplayers]
+            tempdict['average'] = round(sum(tempdict['data']) /
+                                        len(tempdict['data']), 1)
+            tempdict['you'] = int(getattr(self.player, tempdict['name']))
             tempdict['data'] = safe_json(tempdict['data'])
             alldata.append(tempdict)
         return{'data': alldata}

@@ -140,21 +140,21 @@ SESSION_CONFIG_DEFAULTS = {
 
 # from colsan.models.Constants import players_per_group
 SESSION_CONFIGS = [
-    # {
-    #     'name': 'dictatorMU',
-    #     'display_name': "Session 1. Dictator Game + beliefs",
-    #     'num_demo_participants': 1,
-    #     'app_sequence': ['dictatorMU'],
-    # },
+    {
+        'name': 'dictatorMU',
+        'display_name': "Session 1. Dictator Game + beliefs",
+        'num_demo_participants': 1,
+        'app_sequence': ['dictatorMU'],
+    },
     #
-    # {
-    #     'name': 'pgg',
-    #     'display_name': "Session 2. Public good game",
-    #     'num_demo_participants': 3,
-    #     'app_sequence': ['pggfg'],
-    #     'punishment':False,
-    #     'colsan':False,
-    # },
+    {
+        'name': 'pgg',
+        'display_name': "Session 2. Public good game",
+        'num_demo_participants': 3,
+        'app_sequence': ['pggfg'],
+        'punishment':False,
+        'colsan':False,
+    },
 
 
     # {
@@ -217,12 +217,7 @@ SESSION_CONFIGS = [
     #     'num_demo_participants': 1,
     #     'app_sequence': ['test'],
     # },
-    {
-        'name': 'dictatorMU',
-        'display_name': "Session 1. Dictator Game + beliefs",
-        'num_demo_participants': 1,
-        'app_sequence': ['dictatorMU'],
-    },
+
 ]
 
 # anything you put after the below line will override
