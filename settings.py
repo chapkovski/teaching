@@ -227,5 +227,5 @@ SESSION_CONFIGS = [
 # }]
 # print(TEMPLATES)
 otree.settings.augment_settings(globals())
-from  otree.views.demo import DemoIndex
-DemoIndex.template_name = 'new_demo_index.html'
+# from  otree.views.demo import DemoIndex
+# DemoIndex.template_name = 'new_demo_index.html'
