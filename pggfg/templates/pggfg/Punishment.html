@@ -23,7 +23,7 @@
 {% endblock %}
 
 {% block title %}
-    Punishment stage
+    Stage 1: Sending punishment tokens
 {% endblock %}
 {% block scripts %}
   <script type="text/javascript">
@@ -42,7 +42,7 @@
 {% block content %}
 
       {% include 'pggfg/punishmentinstructions.html' %}
-  <table class="table table-striped">
+  <table class="table table-hover table-striped table-responsive table-bordered">
     <tr>
         <th>Participant</th><th>Contribution</th><th>Punishment tokens sent</th><th>Their earnings reduced by</th></tr>
     {% for ab in abclist %}

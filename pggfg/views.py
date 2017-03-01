@@ -196,7 +196,8 @@ class FinalResults(Page):
         return self.subsession.round_number == Constants.num_rounds
 
     def vars_for_template(self):
-        return {'highcharts_series': preparing_charts(final=True,me=self.player), }
+        return {'highcharts_series': preparing_charts(final=True,me=self.player),
+        'total_earnings': self.group.total_contribution*Constants.efficiency_factor, }
 
 
 page_sequence = [
