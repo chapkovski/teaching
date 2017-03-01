@@ -6,6 +6,7 @@ import random
 # from settings import SESSION_CONFIGS
 from django.contrib.postgres.fields import ArrayField
 from django import forms
+from .functions import preparing_charts
 # for the future implementation of matrix - jsonfield (now just postgres
 # ArrayField)
 # from otree.db.serializedfields import JSONField
@@ -45,11 +46,7 @@ class Subsession(BaseSubsession):
     def vars_for_admin_report(self):
         contributions = [p.contribution for p in self.get_players()
                          if p.contribution is not None]
-        return {
-            'avg_contribution': sum(contributions)/len(contributions),
-            'min_contribution': min(contributions),
-            'max_contribution': max(contributions),
-        }
+        return {'highcharts_series': preparing_charts(final=True,me=self, isSubsession=True), }
 
 
 class Group(BaseGroup):
