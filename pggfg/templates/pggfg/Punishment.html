@@ -23,7 +23,7 @@
 {% endblock %}
 
 {% block title %}
-    Detection
+    Punishment stage
 {% endblock %}
 {% block scripts %}
   <script type="text/javascript">
@@ -31,7 +31,8 @@
  {% if Constants.punishment_factor %}
  {% for f in form %}
   $( "#id_{{f.name}}" ).on('keyup', function () {
-  $( "#{{f.name}}_received" ).html($(this).val()*{{Constants.punishment_factor}});
+  $( "#{{f.name}}_received" ).html(Math.round($(this).val()*{{Constants.punishment_factor}}));
+
   });
   {% endfor %}
   {% endif %}
@@ -51,7 +52,7 @@
 
         </td><td >{{ ab.1}}</td>
   </td>
-        <td><input autofocus="autofocus" class="form-control " id="id_{{ab.0.name}}" max="100.00" min="0" name="{{ab.0.name}}" required="required" type="number"></td>
+        <td><input autofocus="autofocus" class="form-control " id="id_{{ab.0.name}}" max="{{Constants.punishment_limit}}" min="0" name="{{ab.0.name}}" required="required" type="number"></td>
 <td><div id="{{ab.0.name}}_received">
 
 </div></td>

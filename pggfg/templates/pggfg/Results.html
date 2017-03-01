@@ -21,10 +21,11 @@
 
         <tr><td>Total earnings from the project:</td><td>{{ total_earnings }}</td></tr>
         <tr><td>Your earnings from the project:</td><td>{{ group.individual_share }}</td></tr>
-
+  {% if subsession.punishment %}
         <tr><td colspan="2"><hr/></td></tr>
         <tr><td>Punishment you sent:</td><td>{{ player.punishment_sent }}</td></tr>
         <tr><td>Punishment you received:</td><td>{{ player.punishment_received }}</td></tr>
+  {% endif %}
   <tr><td colspan="2"><hr/></td></tr>
         <tr><td>Thus in total you earned:</td><td>{{ player.payoff }}</td></tr>
 

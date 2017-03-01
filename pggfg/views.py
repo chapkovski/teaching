@@ -50,6 +50,9 @@ class Punishment(Page):
     """here the decision to punish the peers is taken"""
     form_model = models.Player
 
+    def is_displayed(self):
+        return self.subsession.punishment
+
     def vars_for_template(self):
 
         others = self.player.get_others_in_group()
@@ -83,6 +86,9 @@ class Punishment(Page):
 class PunishmentWaitPage(WaitPage):
     """Waiting for the group to finish the punishment stage before
     showing them results"""
+    def is_displayed(self):
+        return self.subsession.punishment
+
     def after_all_players_arrive(self):
         for p in self.group.get_players():
             p.punishment_sent = sum(

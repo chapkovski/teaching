@@ -27,10 +27,17 @@ class Constants(BaseConstants):
     endowment = c(100)
     efficiency_factor = 2
     punishment_factor = 3
+    punishment_limit = int(endowment/punishment_factor)
 
 
 class Subsession(BaseSubsession):
+    punishment = models.BooleanField()
+
     def before_session_starts(self):
+        if 'punishment' in self.session.config:
+            self.punishment = self.session.config['punishment']
+        else:
+            self.punishment = False
         for g in self.get_groups():
             g.punishmentmatrix = [[0 for i in self.get_players()]
                                   for i in self.get_players()]
@@ -95,6 +102,6 @@ for i in range(Constants.players_per_group):
             widget=forms.NumberInput(attrs={'class': 'form-control ',
                                             'required': 'required',
                                             'min': 0,
-                                            'max': Constants.endowment,
+                                            'max': Constants.punishment_limit,
                                             'autofocus': 'autofocus', })
         ))
