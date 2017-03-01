@@ -108,7 +108,7 @@ class ResultsWaitPage(WaitPage):
 
 
 def preparing_charts(me,final=False):
-        mygroupaverage=[[p.round_number,p.group.average_contribution,] for p in me.in_all_rounds()]
+        mygroupaverage=[[p.round_number,round(p.group.average_contribution),] for p in me.in_all_rounds()]
         mygroupcontribs = [[r.round_number,(a.contribution or 0)] for r in me.group.in_all_rounds() for a in r.get_players()]
         personcontribs = [[p.round_number,p.contribution,] for p in me.in_all_rounds()]
         empty_rounds=range(me.subsession.round_number +1, Constants.num_rounds + 1)
@@ -118,6 +118,8 @@ def preparing_charts(me,final=False):
         series = []
         if final:
             all_contribs = [[r.round_number,(a.contribution or 0)] for r in me.subsession.in_all_rounds() for a in r.get_players()]
+            popsize =len(me.subsession.get_players())
+            all_contribs_average = [[r.round_number, round(sum([p.contribution for p in r.get_players()])/popsize)] for r in me.subsession.in_all_rounds()]
             series.append({
                 'name': 'All participants',
                 'type': 'scatter',
@@ -127,6 +129,20 @@ def preparing_charts(me,final=False):
                     'lineWidth': 1,
                     'lineColor':'blue',
                     'radius':7,
+                } })
+            series.append({
+                'name': 'Overall average',
+                'type': 'line',
+                'color': 'rgba(0, 0, 0, 0.2)',
+                'lineWidth': 15,
+                'data': all_contribs_average,
+                            'marker': {
+                    'enabled':False,
+                    'fillColor': '#FFFFFF',
+                    'lineWidth': 1,
+                    'lineColor':'blue',
+                    'radius':1,
+                    'symbol': 'circle',
                 } })
 
         series.append({
@@ -159,6 +175,8 @@ def preparing_charts(me,final=False):
 
 class Results(Page):
     """Players payoff: How much each has earned in this round"""
+    def is_displayed(self):
+        return self.subsession.round_number < Constants.num_rounds
 
     def vars_for_template(self):
         return {'highcharts_series': preparing_charts(me=self.player),

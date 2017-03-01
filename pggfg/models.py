@@ -20,7 +20,7 @@ public good game with some variations depending on session configs:
 class Constants(BaseConstants):
     name_in_url = 'pggfg'
     players_per_group = 3
-    num_rounds = 10
+    num_rounds = 3
 
     instructions_template = 'pggfg/Instructions.html'
 
@@ -39,8 +39,8 @@ class Subsession(BaseSubsession):
         else:
             self.punishment = False
         for g in self.get_groups():
-            g.punishmentmatrix = [[0 for i in self.get_players()]
-                                  for i in self.get_players()]
+            g.punishmentmatrix = [[0 for i in g.get_players()]
+                                  for i in g.get_players()]
 
     def vars_for_admin_report(self):
         contributions = [p.contribution for p in self.get_players()

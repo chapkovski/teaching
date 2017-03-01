@@ -159,7 +159,7 @@ SESSION_CONFIGS = [
         'name': 'pggfg',
         'display_name': """Session 4. Public good game with punishment
         (Fehr & Gaechter)""",
-        'num_demo_participants': 4,
+        'num_demo_participants': 3,
         'punishment': True,
         'app_sequence': ['pggfg'],
     },
