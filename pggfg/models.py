@@ -56,6 +56,7 @@ class Group(BaseGroup):
     # myjson = JSONField(null=True, doc="""json for saving punishment matrix.
     # for the future implementations. now i am using postgres arrayfield which
     # makes it impossible to use it with sqlite """)
+
     total_contribution = models.IntegerField()
     average_contribution = models.FloatField()
     individual_share = models.CurrencyField()
@@ -84,9 +85,12 @@ class Group(BaseGroup):
                            + self.individual_share,
                            - (p.punishment_sent or 0),
                            - (p.punishment_received or 0), ])
+            p.cumulative_payoff = sum([me.payoff for me in
+                                      p.in_all_rounds()])
 
 
 class Player(BasePlayer):
+    cumulative_payoff = models.FloatField(initial=0)
     punishment_sent = models.IntegerField()
     punishment_received = models.IntegerField()
     contribution = models.PositiveIntegerField(

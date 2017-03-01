@@ -6,8 +6,17 @@
 
 {% endblock %}
 
-  <div class="panel-body"><table class="table table-hover table-striped table-responsive table-bordered">
+  <div class="panel-body">
+    <table class="table table-hover table-striped table-responsive table-bordered">
 
+  <thead  class="thead-default">
+    <tr class="bg-primary">
+
+      <th>Round</th>
+      <td id="filka"></td>
+      <th>{{subsession.round_number}}</th>
+    </tr>
+  </thead>
     <tbody>
       <tr class="success">
         <td>Your endowment:</td><td id="filka"></td>
