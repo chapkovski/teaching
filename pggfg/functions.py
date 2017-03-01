@@ -23,13 +23,13 @@ def preparing_charts(me=None, final=False,isSubsession=False):
             'name': 'All participants',
             'type': 'scatter',
             'data': all_contribs,
-                        'marker': {
-                'fillColor': '#FFFFFF',
-                'lineWidth': 1,
-                'lineColor':'blue',
-                'symbol': 'circle',
-                'radius':7,
-            } })
+                    'marker': {
+                                'fillColor': '#FFFFFF',
+                                'lineWidth': 1,
+                                'lineColor': 'blue',
+                                'symbol': 'circle',
+                                'radius': 7,
+                                }})
         series.append({
             'name': 'Overall average',
             'type': 'line',

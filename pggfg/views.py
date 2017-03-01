@@ -10,7 +10,7 @@ from django.forms import modelform_factory
 from django import forms
 import json
 from .functions import preparing_charts
-
+import random
 class PunishmentForm(forms.Form):
 
     def __init__(self, fields_to_add, *args, **kwargs):
@@ -33,8 +33,7 @@ class Contribute(Page):
     form_model = models.Player
     form_fields = ['contribution']
 
-    timeout_submission = {'contribution': c(Constants.endowment / 2)}
-
+    timeout_submission = {'contribution': random.randint(0,Constants.endowment)}
 
 
 class ContributionWaitPage(WaitPage):
