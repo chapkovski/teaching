@@ -27,13 +27,14 @@
 {% endblock %}
 {% block scripts %}
   <script type="text/javascript">
-  //   var a =1;
-  //
-  //     $(function () {
-  //     var contribsTLC = {{tlcs}};
-  //     jQuery.each( contribsTLC, function( i, val ) {
-  // console.log( "Mine is " + val + "." );})
-  //       });
+
+ {% if Constants.punishment_factor %}
+ {% for f in form %}
+  $( "#id_{{f.name}}" ).on('keyup', function () {
+  $( "#{{f.name}}_received" ).html($(this).val()*{{Constants.punishment_factor}});
+  });
+  {% endfor %}
+  {% endif %}
 
   </script>
 {% endblock %}
@@ -42,7 +43,7 @@
     {% include Constants.instructions_template %}
   <table class="table table-striped">
     <tr>
-        <th>Participant</th><th>Contribution</th><th>Punish</th>
+        <th>Participant</th><th>Contribution</th><th>Punishment tokens sent</th><th>Their earnings reduced by</th></tr>
     {% for ab in abclist %}
     <tr>
         <td>
@@ -51,7 +52,9 @@
         </td><td >{{ ab.1}}</td>
   </td>
         <td><input autofocus="autofocus" class="form-control " id="id_{{ab.0.name}}" max="100.00" min="0" name="{{ab.0.name}}" required="required" type="number"></td>
+<td><div id="{{ab.0.name}}_received">
 
+</div></td>
     </tr>
     {% endfor %}
 

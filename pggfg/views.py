@@ -60,7 +60,8 @@ class Punishment(Page):
         punishmentform = PunishmentForm(fields_to_show)
         return {'abclist': zip(punishmentform,
                                contribs_to_show,
-                               verbose_names)}
+                               verbose_names),
+                'form': punishmentform, }
 
     def get_form_fields(self):
         others = self.player.get_others_in_group()
@@ -84,8 +85,10 @@ class PunishmentWaitPage(WaitPage):
     showing them results"""
     def after_all_players_arrive(self):
         for p in self.group.get_players():
-            p.punishment_sent = sum(self.group.punishmentmatrix[p.id_in_group-1])
-            p.punishment_received = sum(row[p.id_in_group-1]
+            p.punishment_sent = sum(
+                                    self.group.punishmentmatrix
+                                    [p.id_in_group-1])
+            p.punishment_received = Constants.punishment_factor*sum(row[p.id_in_group-1]
                                         for row in self.group.punishmentmatrix)
 
 
@@ -94,6 +97,7 @@ class Results(Page):
 
     def vars_for_template(self):
         pass
+
 
 
 class FinalWaitPage(WaitPage):

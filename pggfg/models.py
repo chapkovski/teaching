@@ -6,6 +6,9 @@ import random
 # from settings import SESSION_CONFIGS
 from django.contrib.postgres.fields import ArrayField
 from django import forms
+# for the future implementation of matrix - jsonfield (now just postgres
+# ArrayField)
+# from otree.db.serializedfields import JSONField
 
 doc = """
 public good game with some variations depending on session configs:
@@ -23,6 +26,7 @@ class Constants(BaseConstants):
 
     endowment = c(100)
     efficiency_factor = 2
+    punishment_factor = 3
 
 
 class Subsession(BaseSubsession):
@@ -42,6 +46,9 @@ class Subsession(BaseSubsession):
 
 
 class Group(BaseGroup):
+    # myjson = JSONField(null=True, doc="""json for saving punishment matrix.
+    # for the future implementations. now i am using postgres arrayfield which
+    # makes it impossible to use it with sqlite """)
     total_contribution = models.IntegerField()
     average_contribution = models.FloatField()
     individual_share = models.CurrencyField()
@@ -53,6 +60,9 @@ class Group(BaseGroup):
         ),
         size=Constants.players_per_group,
         null=True,
+        # doc="""not the best solution to store the punishment matrix.
+        # in the future it is better to switch to database-independentJSONField
+        # provided by otree."""
     )
 
     def set_payoffs(self):
