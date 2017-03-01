@@ -98,8 +98,8 @@ ROOMS = [
         'participant_label_file': '_rooms/econ101.txt',
     },
     {
-        'name': 'live_demo',
-        'display_name': 'Room for live demo (no participant labels)',
+        'name': 'uzh',
+        'display_name': 'Room for Social Norms class',
     },
 ]
 
