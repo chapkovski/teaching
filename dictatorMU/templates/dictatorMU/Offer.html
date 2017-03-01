@@ -3,7 +3,22 @@
 {% block styles %}
 
     <link href="{% static "dictatorMU/css/style.css" %}" rel="stylesheet">
+<style>
+.myimg{
+height:200px;
+overflow:hidden;
+border-color:#DADADA;
+border-style:solid;
+border-width:0;
+margin-bottom:20px;
+}
+.myimg  img {
+    display : block;
+    margin : auto;
 
+}
+.alert{margin:0;padding:0;}
+</style>
 {% endblock %}
 {% block title %}
 
@@ -12,7 +27,21 @@
 {% endblock %}
 
 {% block content %}
-{{form}}
+
+{% for field in form %}
+
+      <div class="myimg" >
+        {% with 'dictatorMU/'|add:field.field.image|add:'.jpg' as image_static %}
+          <img height="200px" src="  {% static image_static %}"/>
+        {% endwith %}
+
+      </div>
+
+
+ {% autoescape off %}  <strong>  {{field.label}}</strong> {% endautoescape %}
+
+      {{field}}
+{% endfor %}
 <p></p><p></p>
 {% next_button %}
 {% endblock %}

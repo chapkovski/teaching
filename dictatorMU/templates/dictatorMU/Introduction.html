@@ -2,7 +2,22 @@
 {% load staticfiles %}
 {% block styles %}
 
-    <link href="{% static "dictatorMU/css/style.css" %}" rel="stylesheet">
+<style>
+.myimg{
+height:200px;
+overflow:hidden;
+border-color:#DADADA;
+border-style:solid;
+border-width:0;
+margin-bottom:20px;
+}
+.myimg  img {
+    display : block;
+    margin : auto;
+
+}
+.alert{margin:0;padding:0;}
+</style>
 
 {% endblock %}
 {% block title %}
@@ -16,15 +31,10 @@ to another receiver B. If you are randomly assigned to be the receiver, you may 
 yet another participant from this survey, whom we call sender A.</p>
 
 
-    <div class="pics">
-      <div class="artiststhumbnail {% if field.field.active1 %}active{% endif %}" >
-          <img height="100px" src="{% static "dictatorMU/1.png" %}"/>
-      </div>
 
-      <div class="artiststhumbnail {% if field.field.active2%}active{% endif %}">
-          <img height="100px" src="{% static "dictatorMU/2.png" %}"/>
+      <div class="myimg" >
+          <img height="200px" src="{% static "dictatorMU/0.jpg" %}"/>
       </div>
-    </div>
 <p></p>
   <p>Should you be randomly assigned to the role of the sender, your choices from the allocation task will
     be implemented. In case you are the receiver, you will receive the points sent from yet another sender.

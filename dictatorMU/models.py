@@ -10,9 +10,11 @@ doc = """
 One player decides how to divide a certain amount between himself and the other
 player.
 
-See: Kahneman, Daniel, Jack L. Knetsch, and Richard H. Thaler. "Fairness
-and the assumptions of economics." Journal of business (1986):
-S285-S300.
+before that some questions are asked to reconstruct an audience's normative
+and empirical expectations: see more in Bicchieri, C., 2005.
+The grammar of society: The nature and dynamics of social norms.
+Cambridge University Press. Chapter 1.
+
 
 """
 
@@ -31,9 +33,9 @@ class Constants(BaseConstants):
                     ]
 
 class MyFormField(forms.IntegerField):
-    def __init__(self,active1=False,active2=False,*args, **kwargs):
-        self.active1=active1
-        self.active2=active2
+    def __init__(self,image=None,*args, **kwargs):
+        self.image = image
+
         super(MyFormField, self).__init__(*args,  **kwargs)
         self.widget = forms.NumberInput(attrs={'class':'form-control ',
         'required' : 'required',
@@ -42,16 +44,16 @@ class MyFormField(forms.IntegerField):
 
 class MyOwnField(models.IntegerField):
     def __init__(self,*args, **kwargs):
-        self.active1=kwargs.pop('active1', None)
-        self.active2=kwargs.pop('active2', None)
+        self.image=kwargs.pop('image', None)
+
         kwargs['max'] = Constants.endowment
         kwargs['min'] = 0
         super(MyOwnField, self).__init__(*args, **kwargs)
 
     def formfield(self, **kwargs):
         defaults = {'form_class': MyFormField,
-                    'active1': self.active1,
-                    'active2': self.active2}
+                    'image': self.image,
+                    }
         defaults.update(kwargs)
         return super().formfield(**defaults)
 
@@ -87,19 +89,29 @@ class Player(BasePlayer):
     profit2 = models.FloatField()
     profit3 = models.FloatField()
     profit4 = models.FloatField()
+
     ns6_1 = MyOwnField(
-        verbose_name="A sender should give the following share",
+        image='1',
+        verbose_name="""I believe a <span class="alert alert-danger">sender</span> should give the following share of the
+        {} to the receiver:""".format(c(Constants.endowment)),
         doc="""Personal normative belief"""
     )
     ns6_2 = MyOwnField(
-        verbose_name="The receiver expects the following share",
+        image='2',
+        verbose_name="""I believe the <span class="alert alert-danger">receiver</span>  expects
+         from me as a sender to give him or her the following
+         share of the {}:""".format(c(Constants.endowment)),
         doc="""Normative expectation"""
     )
     ns6_3 = MyOwnField(
-        verbose_name="Most senders give the following share",
+        image='1',
+        verbose_name="""I believe most <span class="alert alert-danger">senders</span> give the following share of the
+         {} to receivers:""".format(c(Constants.endowment)),
         doc="""Empirical expectation"""
     )
     ns6_4 = MyOwnField(
-        verbose_name="I give the following share",
+        image='1',
+        verbose_name="""I give the following amount of the {}
+        to the receiver:""".format(c(Constants.endowment)),
         doc="""Normative behaviour""",
     )
