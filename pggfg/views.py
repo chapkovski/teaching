@@ -98,6 +98,10 @@ class PunishmentWaitPage(WaitPage):
                                         for row in self.group.punishmentmatrix)
 
 
+class ResultsWaitPage(WaitPage):
+    def after_all_players_arrive(self):
+        self.group.set_payoffs()
+
 class Results(Page):
     """Players payoff: How much each has earned in this round"""
 
@@ -173,6 +177,7 @@ page_sequence = [
     ContributionWaitPage,
     Punishment,
     PunishmentWaitPage,
+    ResultsWaitPage,
     Results,
     FinalWaitPage,
     FinalResults,

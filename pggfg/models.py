@@ -77,7 +77,13 @@ class Group(BaseGroup):
         self.average_contribution = self.total_contribution/ Constants.players_per_group
         self.individual_share = self.total_contribution * Constants.efficiency_factor / Constants.players_per_group
         for p in self.get_players():
-            p.payoff = (Constants.endowment - p.contribution) + self.individual_share
+            # if punishment_sent or _received is not defined then use 0 -
+            # for treatment without punishment
+            p.payoff = sum([+ Constants.endowment,
+                           - p.contribution,
+                           + self.individual_share,
+                           - (p.punishment_sent or 0),
+                           - (p.punishment_received or 0), ])
 
 
 class Player(BasePlayer):
