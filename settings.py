@@ -92,11 +92,11 @@ DEMO_PAGE_INTRO_TEXT = """
 """
 
 ROOMS = [
-    {
-        'name': 'econ101',
-        'display_name': 'Econ 101 class',
-        'participant_label_file': '_rooms/econ101.txt',
-    },
+    # {
+    #     'name': 'econ101',
+    #     'display_name': 'Econ 101 class',
+    #     'participant_label_file': '_rooms/econ101.txt',
+    # },
     {
         'name': 'uzh',
         'display_name': 'Room for Social Norms class',

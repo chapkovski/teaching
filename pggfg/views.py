@@ -9,7 +9,7 @@ from otree.api import widgets
 from django.forms import modelform_factory
 from django import forms
 import json
-
+from .functions import preparing_charts
 
 class PunishmentForm(forms.Form):
 
@@ -106,74 +106,6 @@ class ResultsWaitPage(WaitPage):
         self.group.set_payoffs()
 
 
-def preparing_charts(me=None, final=False):
-    series = []
-    if me:
-        mygroupaverage = [[p.round_number,round(p.group.average_contribution),] for p in me.in_all_rounds()]
-        mygroupcontribs = [[r.round_number,(a.contribution or 0)] for r in me.group.in_all_rounds() for a in r.get_players()]
-        personcontribs = [[p.round_number,p.contribution,] for p in me.in_all_rounds()]
-        empty_rounds = range(me.subsession.round_number +1, Constants.num_rounds + 1)
-        making_add = list(zip(list(empty_rounds),['']*len(empty_rounds)))
-        mygroupcontribs += making_add
-        personcontribs += making_add
-        series.append({
-            'name': 'Your group average',
-            'type': 'line',
-            'data': mygroupaverage})
-
-        series.append({
-            'name': 'Your group members',
-            'type': 'scatter',
-            'data': mygroupcontribs,
-            'marker': {
-                    'fillColor': '#FFFFFF',
-                    'lineWidth': 1,
-                    'lineColor': 'red',
-                    'radius': 7,
-                    'symbol': 'circle'},
-                    })
-
-        series.append({
-            'name': 'Your contributions',
-            'type': 'line',
-            'data': personcontribs,
-            'marker': {
-                        'radius': 5,
-                        }})
-
-    if final:
-        all_contribs = [[r.round_number,(a.contribution or 0)] for r in me.subsession.in_all_rounds() for a in r.get_players()]
-        popsize =len(me.subsession.get_players())
-        all_contribs_average = [[r.round_number, round(sum([p.contribution for p in r.get_players()])/popsize)] for r in me.subsession.in_all_rounds()]
-        series.append({
-            'name': 'All participants',
-            'type': 'scatter',
-            'data': all_contribs,
-                        'marker': {
-                'fillColor': '#FFFFFF',
-                'lineWidth': 1,
-                'lineColor':'blue',
-                'radius':7,
-            } })
-        series.append({
-            'name': 'Overall average',
-            'type': 'line',
-            'color': 'rgba(0, 0, 0, 0.2)',
-            'lineWidth': 15,
-            'data': all_contribs_average,
-                        'marker': {
-                'enabled':False,
-                'fillColor': '#FFFFFF',
-                'lineWidth': 1,
-                'lineColor':'blue',
-                'radius':1,
-                'symbol': 'circle',
-            } })
-
-
-
-    highcharts_series = safe_json(series)
-    return highcharts_series
 
 class Results(Page):
     """Players payoff: How much each has earned in this round"""
@@ -199,7 +131,8 @@ class FinalResults(Page):
         return self.subsession.round_number == Constants.num_rounds
 
     def vars_for_template(self):
-        return {'highcharts_series': preparing_charts(final=True,me=self.player),
+        return {
+        'highcharts_series': preparing_charts(final=True, me=self.player),
         'total_earnings': self.group.total_contribution*Constants.efficiency_factor, }
 
 
