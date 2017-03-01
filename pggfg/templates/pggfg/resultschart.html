@@ -1,0 +1,55 @@
+{% load staticfiles otree_tags %}
+
+<div id="highcharts-container"
+         style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+
+
+
+
+
+
+
+
+{% block scripts %}
+    <script src="//code.highcharts.com/highcharts.js"></script>
+    <script src="//code.highcharts.com/highcharts-3d.js"></script>
+
+    <script>
+        $(function () {
+            $('#highcharts-container').highcharts({
+                title: {
+                    text: 'Contributions'
+                },
+                chart: {
+       type: 'scatter',
+       zoomType: 'xy'
+   },
+                xAxis: {
+
+                    title: {text: 'Round'},
+                    allowDecimals: false,
+
+                },
+                yAxis: {
+                    title: {
+                        text: 'Points'
+                    },
+
+                },
+                tooltip: {
+                    crosshairs: true,
+                    headerFormat: 'Round: <b>{point.x}</b><br /> ',
+                    pointFormat: 'Contribution: <b>{point.y}</b>'
+                },
+                legend: {
+                    layout: 'vertical',
+                    align: 'right',
+                    verticalAlign: 'middle',
+                    borderWidth: 0
+                },
+                series: {{ highcharts_series }}
+            });
+        });
+    </script>
+{% endblock %}

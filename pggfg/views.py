@@ -8,6 +8,7 @@ from otree.common import safe_json
 from otree.api import widgets
 from django.forms import modelform_factory
 from django import forms
+import json
 
 
 class PunishmentForm(forms.Form):
@@ -99,15 +100,70 @@ class PunishmentWaitPage(WaitPage):
 
 
 class ResultsWaitPage(WaitPage):
+    # not the best solution, but suitable for didactical reasons:
+    # so all the players can see all others in entire population
+    # wait_for_all_groups = True
     def after_all_players_arrive(self):
         self.group.set_payoffs()
+
+
+def preparing_charts(me,final=False):
+        mygroupaverage=[[p.round_number,p.group.average_contribution,] for p in me.in_all_rounds()]
+        mygroupcontribs = [[r.round_number,(a.contribution or 0)] for r in me.group.in_all_rounds() for a in r.get_players()]
+        personcontribs = [[p.round_number,p.contribution,] for p in me.in_all_rounds()]
+        empty_rounds=range(me.subsession.round_number +1, Constants.num_rounds + 1)
+        making_add=list(zip(list(empty_rounds),['']*len(empty_rounds)))
+        mygroupcontribs+=making_add
+        personcontribs+=making_add
+        series = []
+        if final:
+            all_contribs = [[r.round_number,(a.contribution or 0)] for r in me.subsession.in_all_rounds() for a in r.get_players()]
+            series.append({
+                'name': 'All participants',
+                'type': 'scatter',
+                'data': all_contribs,
+                            'marker': {
+                    'fillColor': '#FFFFFF',
+                    'lineWidth': 1,
+                    'lineColor':'blue',
+                    'radius':7,
+                } })
+
+        series.append({
+            'name': 'Your group average',
+            'type': 'line',
+            'data': mygroupaverage})
+
+        series.append({
+            'name': 'Your group members',
+            'type': 'scatter',
+            'data': mygroupcontribs,
+            'marker': {
+                    'fillColor': '#FFFFFF',
+                    'lineWidth': 1,
+                    'lineColor': 'red',
+                    'radius': 7,
+                    'symbol': 'circle'},
+                    })
+
+        series.append({
+            'name': 'Your contributions',
+            'type': 'line',
+            'data': personcontribs,
+             'marker': {
+                        'radius':5,
+        }})
+
+        highcharts_series = safe_json(series)
+        return highcharts_series
 
 class Results(Page):
     """Players payoff: How much each has earned in this round"""
 
     def vars_for_template(self):
-        pass
-
+        return {'highcharts_series': preparing_charts(me=self.player),
+                'total_earnings': Constants.efficiency_factor*self.group.total_contribution,
+                }
 
 
 class FinalWaitPage(WaitPage):
@@ -123,52 +179,7 @@ class FinalResults(Page):
         return self.subsession.round_number == Constants.num_rounds
 
     def vars_for_template(self):
-        s = self.subsession
-        mygroupcontribs = [[g.round_number, g.average_contribution, ]
-                           for g in self.group.in_all_rounds()]
-        personcontribs = [[p.round_number, p.contribution, ]
-                          for p in self.player.in_all_rounds()]
-
-        contribs = []
-        contribscatter = []
-        group_ids = []
-        round_nums = []
-
-        for g in s.get_groups():
-            for ags in g.in_all_rounds():
-                for p in ags.get_players():
-                    contribs.append(p.contribution)
-                    group_ids.append(g.id)
-                    round_nums.append(p.subsession.round_number)
-                    contribscatter.append([p.subsession.round_number,
-                                           p.contribution])
-        allcontribstable = zip(group_ids, round_nums, contribs)
-        round_numbers = safe_json(list(range(1, Constants.num_rounds + 1)))
-        series = []
-
-        series.append({
-            'name': 'Your contributions',
-            'type': 'line',
-            'data': personcontribs})
-
-        series.append({
-            'name': 'Your group contributions',
-            'type': 'line',
-            'data': mygroupcontribs})
-
-        series.append({
-            'name': 'all players',
-            'type': 'scatter',
-            'data': [list(a) for a in zip(round_nums, contribs)]})
-
-        highcharts_series = safe_json(series)
-
-        return {'allcontribstable': llcontribstable,
-                'groupcontribs': mygroupcontribs,
-                'personcontribs': personcontribs,
-                'round_numbers': round_numbers,
-                'highcharts_series': highcharts_series,
-                }
+        return {'highcharts_series': preparing_charts(final=True,me=self.player), }
 
 
 page_sequence = [
