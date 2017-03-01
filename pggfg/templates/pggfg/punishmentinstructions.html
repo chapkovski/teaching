@@ -1,0 +1,16 @@
+{% load otree_tags staticfiles %}
+
+<div class="instructions well well-lg">
+
+    <h3 class="panel-sub-heading">
+        Stage 2:
+    </h3>
+
+    <p>
+ At this stage you are able to observe the contributions of your group members
+ and send them 'deduction tokens'. Each deduction token decreases your payoff
+ by 1 point, and decreases the other member's payoff by {{Constants.punishment_factor|c}}.
+ </p>
+ <p>You can't send more than {{Constants.punishment_limit|c}} to each member. </p>
+
+</div>
