@@ -37,7 +37,6 @@ class Contribute(Page):
 
 
 
-
 class ContributionWaitPage(WaitPage):
     """Waiting till all players make their decisions about the contribution"""
     # def after_all_players_arrive(self):
