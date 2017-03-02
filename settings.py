@@ -152,14 +152,14 @@ SESSION_CONFIGS = [
     {
         'name': 'pgg',
         'display_name': "Session 2. Public good game",
-        'num_demo_participants': 3,
+        'num_demo_participants': 4,
         'app_sequence': ['pggfg'],
     },
     {
         'name': 'pggfg',
         'display_name': """Session 4. Public good game with punishment
         (Fehr & Gaechter)""",
-        'num_demo_participants': 3,
+        'num_demo_participants': 4,
         'punishment': True,
         'app_sequence': ['pggfg'],
     },
