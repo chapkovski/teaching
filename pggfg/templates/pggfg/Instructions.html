@@ -5,20 +5,20 @@
 
     <p>
         In this study, you will be in a randomly formed group
-        of {{ Constants.players_per_group }} participants. Each participant in
-        the group is given {{ Constants.endowment|c}}. The group
+        of <b>{{ Constants.players_per_group }}</b> participants. Each participant in
+        the group is given <strong>{{ Constants.endowment|c}}</strong>. The group
         has the opportunity to undertake a joint project. Each participant in
         the group decides how much she or he is going to contribute to
-        the project. Contribution could be any integer from 0
-        to {{ Constants.endowment }}.
+        the project. Contribution could be any integer from <strong>0
+        to {{ Constants.endowment|c}}</strong>.
     </p>
     <p>
         The earnings from the project are calculated as follows: The
-        contributions of all {{ Constants.players_per_group }} participants are
+        contributions of all <strong>{{ Constants.players_per_group }}</strong> participants are
         added up, the total contribution
-        is multiplied by a factor of {{ Constants.efficiency_factor }}, and the
+        is multiplied by a factor of <strong>{{ Constants.efficiency_factor }}</strong>, and the
         resulting amount is the total earnings from the project, which is
-        evenly split among all {{ Constants.players_per_group }}
+        evenly split among all <strong>{{ Constants.players_per_group }}</strong>
         participants. Your payoff equals your earnings from the project, plus
         the amount you did not contribute.
     </p></div>
