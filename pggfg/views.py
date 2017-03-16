@@ -11,6 +11,8 @@ from django import forms
 import json
 from .functions import preparing_charts
 import random
+
+
 class PunishmentForm(forms.Form):
 
     def __init__(self, fields_to_add, *args, **kwargs):
@@ -19,6 +21,15 @@ class PunishmentForm(forms.Form):
         # CHOICES = (("True", True), ("False", False))
         for f in fields_to_add:
             self.fields[f] = forms.IntegerField()
+
+
+class NickNameRequest(Page):
+    form_model = models.Player
+    form_fields = ['nickname']
+
+    def is_displayed(self):
+        return (self.subsession.round_number == 1
+                and self.session.config['nickname'])
 
 
 class Introduction(Page):
@@ -32,16 +43,12 @@ class Contribute(Page):
 
     form_model = models.Player
     form_fields = ['contribution']
-
-    timeout_submission = {'contribution': random.randint(0,Constants.endowment)}
+    timeout_submission = {'contribution':
+                          random.randint(0, Constants.endowment)}
 
 
 class ContributionWaitPage(WaitPage):
     """Waiting till all players make their decisions about the contribution"""
-    # def after_all_players_arrive(self):
-        # self.group.detect_TLC()
-        # self.group.set_payoffs()
-
     body_text = "Waiting for other participants to contribute."
 
 
@@ -136,6 +143,7 @@ class FinalResults(Page):
 
 
 page_sequence = [
+    NickNameRequest,
     Introduction,
     Contribute,
     ContributionWaitPage,

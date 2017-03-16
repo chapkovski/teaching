@@ -90,6 +90,8 @@ class Group(BaseGroup):
 
 
 class Player(BasePlayer):
+    nickname = models.CharField(max_length=100,
+                                verbose_name='Please enter your nickname')
     cumulative_payoff = models.FloatField(initial=0)
     punishment_sent = models.IntegerField()
     punishment_received = models.IntegerField()

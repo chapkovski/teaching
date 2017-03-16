@@ -162,6 +162,7 @@ SESSION_CONFIGS = [
         'num_demo_participants': 4,
         'punishment': True,
         'app_sequence': ['pggfg'],
+        'nickname':True,
     },
 
 
