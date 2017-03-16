@@ -27,8 +27,9 @@
 {% endblock %}
 {% block scripts %}
   <script type="text/javascript">
- maxpun = {{Constants.punishment_limit}};
- minpun = 0;
+ var maxpun = {{Constants.punishment_limit}};
+ var minpun = 0;
+ var totalpunishmentcost = 0;
  {% if Constants.punishment_factor %}
  {% for f in form %}
   $( "#id_{{f.name}}" ).on('keyup', function () {
@@ -37,6 +38,13 @@
      var receiver =  $( "#{{f.name}}_received" )
   receiver.html(howmuch);
 !(curval<=maxpun & curval>=minpun) ? receiver.css( "color", "red" ): receiver.css( "color", "initial" );
+
+totalpunishmentcost=0;
+$('.punishinput').each(function(i, obj) {
+    totalpunishmentcost += Number(obj.value);
+});
+
+  $('#yourcost').html(totalpunishmentcost);
   });
   {% endfor %}
   {% endif %}
@@ -56,13 +64,18 @@
 
         </td><td >{{ ab.1}}</td>
   </td>
-        <td><input autofocus="autofocus" class="form-control " id="id_{{ab.0.name}}" max="{{Constants.punishment_limit}}" min="0" name="{{ab.0.name}}" maxlength="3" required="required" type="number"></td>
+        <td><input autofocus="autofocus" class="form-control punishinput " id="id_{{ab.0.name}}" max="{{Constants.punishment_limit}}" min="0" name="{{ab.0.name}}" maxlength="3" required="required" type="number"></td>
 <td><div id="{{ab.0.name}}_received">
 
 </div></td>
     </tr>
     {% endfor %}
+    <tr class='danger'>
+<td colspan="3"><b>Your earnings will be diminished by:</b></td>
 
+
+<td id='yourcost'></td>
+</tr>
 </table>
 
 
