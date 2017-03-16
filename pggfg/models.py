@@ -22,7 +22,7 @@ class Constants(BaseConstants):
     name_in_url = 'pggfg'
     players_per_group = 4
     num_others_per_group = players_per_group - 1
-    num_rounds = 20
+    num_rounds = 10
 
     instructions_template = 'pggfg/Instructions.html'
 
@@ -40,7 +40,9 @@ class Subsession(BaseSubsession):
             self.punishment = self.session.config['punishment']
         else:
             self.punishment = False
+
         for g in self.get_groups():
+
             g.punishmentmatrix = [[0 for i in g.get_players()]
                                   for i in g.get_players()]
 
