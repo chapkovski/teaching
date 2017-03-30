@@ -164,7 +164,13 @@ SESSION_CONFIGS = [
         'app_sequence': ['pggfg'],
         'nickname':True,
     },
-
+    {
+        'name': 'ultimatum_non_strategy',
+        'display_name': "Session 6. Ultimatum",
+        'num_demo_participants': 2,
+        'app_sequence': ['ultimatum',],
+        'treatment': 'direct_response',
+    },
 
     # {
     #     'name': 'pggfg1',
