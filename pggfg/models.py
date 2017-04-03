@@ -20,9 +20,9 @@ public good game with some variations depending on session configs:
 
 class Constants(BaseConstants):
     name_in_url = 'pggfg'
-    players_per_group = 4
+    players_per_group = 3
     num_others_per_group = players_per_group - 1
-    num_rounds = 10
+    num_rounds = 2
 
     instructions_template = 'pggfg/Instructions.html'
 

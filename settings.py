@@ -171,7 +171,12 @@ SESSION_CONFIGS = [
         'app_sequence': ['ultimatum',],
         'treatment': 'direct_response',
     },
-
+    {
+        'name': 'miniebay',
+        'display_name': 'mini Ebay',
+        'num_demo_participants': 3,
+        'app_sequence': ['miniebay'],
+    },
     # {
     #     'name': 'pggfg1',
     #     'display_name': "Session 4. Public good game with peer punishment",
