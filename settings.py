@@ -10,7 +10,7 @@ import otree.settings
 # settings.py
 # ROOT_URLCONF = 'urls'
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
+CHANNEL_ROUTING = 'miniebay.routing.channel_routing'
 # the environment variable OTREE_PRODUCTION controls whether Django runs in
 # DEBUG mode. If OTREE_PRODUCTION==1, then DEBUG=False
 if environ.get('OTREE_PRODUCTION') not in {None, '', '0'}:
@@ -99,7 +99,7 @@ ROOMS = [
     # },
     {
         'name': 'uzh',
-        'display_name': 'Room for Social Norms class',
+        'display_name': 'Room for Mainz',
     },
 ]
 
@@ -152,14 +152,14 @@ SESSION_CONFIGS = [
     {
         'name': 'pgg',
         'display_name': "Session 2. Public good game",
-        'num_demo_participants': 4,
+        'num_demo_participants': 3,
         'app_sequence': ['pggfg'],
     },
     {
         'name': 'pggfg',
         'display_name': """Session 4. Public good game with punishment
         (Fehr & Gaechter)""",
-        'num_demo_participants': 4,
+        'num_demo_participants': 3,
         'punishment': True,
         'app_sequence': ['pggfg'],
         'nickname':True,

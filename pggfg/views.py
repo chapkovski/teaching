@@ -143,7 +143,7 @@ class FinalResults(Page):
 
 
 page_sequence = [
-    NickNameRequest,
+    # NickNameRequest,
     Introduction,
     Contribute,
     ContributionWaitPage,
