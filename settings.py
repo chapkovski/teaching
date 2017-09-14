@@ -142,28 +142,28 @@ SESSION_CONFIG_DEFAULTS = {
 
 # from colsan.models.Constants import players_per_group
 SESSION_CONFIGS = [
+    {
+        'name': 'dictatorMU',
+        'display_name': "Session 1. Dictator Game + beliefs",
+        'num_demo_participants': 1,
+        'app_sequence': ['dictatorMU'],
+    },
+    # #
     # {
-    #     'name': 'dictatorMU',
-    #     'display_name': "Session 1. Dictator Game + beliefs",
-    #     'num_demo_participants': 1,
-    #     'app_sequence': ['dictatorMU'],
+    #     'name': 'pgg',
+    #     'display_name': "Public good game",
+    #     'num_demo_participants': 3,
+    #     'app_sequence': ['pggfg'],
     # },
-    #
-    {
-        'name': 'pgg',
-        'display_name': "Public good game",
-        'num_demo_participants': 3,
-        'app_sequence': ['pggfg'],
-    },
-    {
-        'name': 'pggfg',
-        'display_name': """Public good game with punishment
-        (Fehr & Gaechter)""",
-        'num_demo_participants': 3,
-        'punishment': True,
-        'app_sequence': ['pggfg'],
-        'nickname':True,
-    },
+    # {
+    #     'name': 'pggfg',
+    #     'display_name': """Public good game with punishment
+    #     (Fehr & Gaechter)""",
+    #     'num_demo_participants': 3,
+    #     'punishment': True,
+    #     'app_sequence': ['pggfg'],
+    #     'nickname':True,
+    # },
     # {
     #     'name': 'ultimatum_non_strategy',
     #     'display_name': "Session 6. Ultimatum",
@@ -171,12 +171,12 @@ SESSION_CONFIGS = [
     #     'app_sequence': ['ultimatum',],
     #     'treatment': 'direct_response',
     # },
-    {
-        'name': 'miniebay',
-        'display_name': 'mini Ebay',
-        'num_demo_participants': 3,
-        'app_sequence': ['miniebay'],
-    },
+    # {
+    #     'name': 'miniebay',
+    #     'display_name': 'mini Ebay',
+    #     'num_demo_participants': 3,
+    #     'app_sequence': ['miniebay'],
+    # },
     # {
     #     'name': 'pggfg1',
     #     'display_name': "Session 4. Public good game with peer punishment",

@@ -4,17 +4,6 @@ from .models import Constants
 import random
 from otree.common import safe_json
 # import copy
-import pprint
-# ======TO DELETE
-from otree.api import widgets
-# from django import forms
-from otree.views.abstract import PlayerUpdateView
-import otree.forms
-
-import floppyforms as fforms
-
-import floppyforms.__future__ as ffforms
-from django.forms import modelform_factory
 
 from django.forms import ModelForm as mmm
 
