@@ -149,12 +149,12 @@ SESSION_CONFIGS = [
         'app_sequence': ['dictatorMU'],
     },
     # #
-    # {
-    #     'name': 'pgg',
-    #     'display_name': "Public good game",
-    #     'num_demo_participants': 3,
-    #     'app_sequence': ['pggfg'],
-    # },
+    {
+        'name': 'pgg',
+        'display_name': "Public good game",
+        'num_demo_participants': 3,
+        'app_sequence': ['pggfg'],
+    },
     # {
     #     'name': 'pggfg',
     #     'display_name': """Public good game with punishment
