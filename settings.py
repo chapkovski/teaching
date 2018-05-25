@@ -101,6 +101,10 @@ ROOMS = [
         'name': 'uzh',
         'display_name': 'Room for Mainz',
     },
+    {
+        'name': 'stgallen',
+        'display_name': 'Room for St.Gallen',
+    },
 ]
 
 
