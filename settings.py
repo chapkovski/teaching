@@ -156,7 +156,7 @@ SESSION_CONFIGS = [
     {
         'name': 'pgg',
         'display_name': "Public good game",
-        'num_demo_participants': 3,
+        'num_demo_participants': 4,
         'app_sequence': ['pggfg'],
     },
     # {
