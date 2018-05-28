@@ -21,7 +21,7 @@ public good game with some variations depending on session configs:
 
 class Constants(BaseConstants):
     name_in_url = 'pggfg'
-    players_per_group = environ.get('PGG_SIZE',4)
+    players_per_group = int(environ.get('PGG_SIZE',4))
     num_others_per_group = players_per_group - 1
     num_rounds = 10
 
