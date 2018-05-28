@@ -141,14 +141,14 @@ SESSION_CONFIGS = [
     },
     # #
     {
-        'name': 'pgg',
+        'name': 'pgg4',
         'display_name': "Public good game 4",
         'num_demo_participants': 4,
         'app_sequence': ['pggfg'],
         'nickname': True,
     },
     {
-        'name': 'pgg',
+        'name': 'pgg3',
         'display_name': "Public good game 3",
         'num_demo_participants': 3,
         'app_sequence': ['pggfg'],
