@@ -4,7 +4,6 @@ from os import environ
 import dj_database_url
 from boto.mturk import qualification
 
-
 import otree.settings
 
 # settings.py
@@ -51,11 +50,9 @@ ADMIN_USERNAME = 'admin'
 # for security, best to set admin password in an environment variable
 ADMIN_PASSWORD = environ.get('OTREE_ADMIN_PASSWORD')
 
-
 # setting for integration with AWS Mturk
 AWS_ACCESS_KEY_ID = environ.get('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = environ.get('AWS_SECRET_ACCESS_KEY')
-
 
 # e.g. EUR, CAD, GBP, CHF, CNY, JPY
 REAL_WORLD_CURRENCY_CODE = 'USD'
@@ -92,21 +89,12 @@ DEMO_PAGE_INTRO_TEXT = """
 """
 
 ROOMS = [
-    # {
-    #     'name': 'econ101',
-    #     'display_name': 'Econ 101 class',
-    #     'participant_label_file': '_rooms/econ101.txt',
-    # },
     {
-        'name': 'uzh',
-        'display_name': 'Room for Mainz',
+        'name': 'otree_workshop',
+        'display_name': 'Room for oTree workshops',
     },
-    {
-        'name': 'stgallen',
-        'display_name': 'Room for St.Gallen',
-    },
-]
 
+]
 
 # from here on are qualifications requirements for workers
 # see description for requirements on Amazon Mechanical Turk website:
@@ -121,8 +109,8 @@ mturk_hit_settings = {
     'frame_height': 500,
     'preview_template': 'global/MTurkPreview.html',
     'minutes_allotted_per_assignment': 60,
-    'expiration_hours': 7*24, # 7 days
-    #'grant_qualification_id': 'YOUR_QUALIFICATION_ID_HERE',# to prevent retakes
+    'expiration_hours': 7 * 24,  # 7 days
+    # 'grant_qualification_id': 'YOUR_QUALIFICATION_ID_HERE',# to prevent retakes
     'qualification_requirements': [
         # qualification.LocaleRequirement("EqualTo", "US"),
         # qualification.PercentAssignmentsApprovedRequirement("GreaterThanOrEqualTo", 50),
@@ -130,7 +118,6 @@ mturk_hit_settings = {
         # qualification.Requirement('YOUR_QUALIFICATION_ID_HERE', 'DoesNotExist')
     ]
 }
-
 
 # if you set a property in SESSION_CONFIG_DEFAULTS, it will be inherited by all configs
 # in SESSION_CONFIGS, except those that explicitly override it.
@@ -158,6 +145,7 @@ SESSION_CONFIGS = [
         'display_name': "Public good game",
         'num_demo_participants': 4,
         'app_sequence': ['pggfg'],
+        'nickname': True,
     },
     # {
     #     'name': 'pggfg',

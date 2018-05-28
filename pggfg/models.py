@@ -3,6 +3,7 @@ from otree.api import (
     Currency as c, currency_range
 )
 import random
+from os import environ
 # from settings import SESSION_CONFIGS
 from django.contrib.postgres.fields import ArrayField
 from django import forms
@@ -20,7 +21,7 @@ public good game with some variations depending on session configs:
 
 class Constants(BaseConstants):
     name_in_url = 'pggfg'
-    players_per_group = 4
+    players_per_group = environ.get('PGG_SIZE',4)
     num_others_per_group = players_per_group - 1
     num_rounds = 10
 
@@ -91,7 +92,8 @@ class Group(BaseGroup):
 
 class Player(BasePlayer):
     nickname = models.CharField(max_length=100,
-                                verbose_name='Please enter your nickname')
+                                verbose_name='Please enter your nickname',
+                                help_text='(Any unique nickname works. It will help us to identify the winner)')
     cumulative_payoff = models.FloatField(initial=0)
     punishment_sent = models.IntegerField()
     punishment_received = models.IntegerField()
