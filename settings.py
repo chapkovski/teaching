@@ -25,13 +25,13 @@ SECRET_KEY = 'l&3%$it4n+o-cdwopdtra=hm96a)7ee2s@i4v_*638q4d)==t4'
 # Examples:
 # postgres://USER:PASSWORD@HOST:PORT/NAME
 # mysql://USER:PASSWORD@HOST:PORT/NAME
-
-DATABASES = {
-    'default': dj_database_url.config(
-        default='postgres://otree_user:basset@localhost/django_db'
-        # 'sqlite:///' + os.path.join(BASE_DIR, 'db.sqlite3')
-    )
-}
+#
+# DATABASES = {
+#     'default': dj_database_url.config(
+#         # default='postgres://otree_user:basset@localhost/django_db'
+#         'sqlite:///' + os.path.join(BASE_DIR, 'db.sqlite3')
+#     )
+# }
 
 # AUTH_LEVEL:
 # this setting controls which parts of your site are freely accessible,
