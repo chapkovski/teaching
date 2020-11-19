@@ -1,0 +1,54 @@
+<div id="app">
+    <div class="card mt-3">
+        <div class="card-body mt-3">
+            <h5 class="text-center">Если вы вложите:</h5>
+            <div>
+            <vue-slider   class='mb-3' v-model="yourOwn" min="0" :max="endowment" :marks="marks"></vue-slider>
+                </div>
+            <h5 class="text-center">А 2 других участника вложат:</h5>
+
+            <vue-slider class="mb-5" v-model="other" min="0" :max="endowment" :marks="marks"></vue-slider>
+
+            <div class="border my-3 p-3 lead text-center">Ваш доход в этом периоде составит <b>[[payoff.toFixed(0)]]</b>
+            </div>
+            <div class="border p-3 lead text-center">Средний доход остальных участников в этом периоде составит: <b>[[otherPayoff.toFixed(0)]]</b>
+            </div>
+
+        </div>
+    </div>
+</div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vue-slider-component@latest/theme/default.css">
+<script src="https://unpkg.com/vue@2.5.2/dist/vue.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue-slider-component@latest/dist/vue-slider-component.umd.min.js"></script>
+<script>
+    const efficiency_factor =
+    {{ Constants.efficiency_factor|json }}
+    const numOthers = {{ Constants.num_others_per_group|json }}
+        new Vue({
+            el: '#app',
+            delimiters: ["[[", "]]"],
+            data() {
+                return {
+                    marks: val => val % 5 === 0,
+                    yourOwn: 0,
+                    other: 0,
+                    endowment: {{ Constants.endowment }},
+                    efficiency_factor: efficiency_factor,
+
+                }
+            },
+            computed: {
+                payoff: function () {
+                    const totalInvestment = this.yourOwn + (numOthers * this.other)
+                    return (this.endowment - this.yourOwn) + (totalInvestment) * this.efficiency_factor / (numOthers + 1)
+                },
+                otherPayoff: function () {
+                    const totalInvestment = this.yourOwn + (numOthers * this.other)
+                    return (this.endowment - this.other) + (totalInvestment) * this.efficiency_factor / (numOthers + 1)
+                }
+            },
+            components: {
+                VueSlider: window['vue-slider-component']
+            }
+        })
+</script>

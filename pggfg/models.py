@@ -22,7 +22,7 @@ class Constants(BaseConstants):
     num_rounds = 2
     instructions_template = 'pggfg/Instructions.html'
     endowment = 20
-    efficiency_factor = 1.6
+    efficiency_factor = 2
     punishment_endowment = 10
     punishment_factor = 3
     punishment_rounds = [2]
@@ -83,7 +83,8 @@ class Player(BasePlayer):
 
     def set_punishment(self):
         self.punishment_sent = self.punishments_sent.all().aggregate(s=Sum('amount')).get('s') or 0
-        self.punishment_received = self.punishments_received.all().aggregate(s=Sum('amount')).get('s') or 0
+        self.punishment_received = (self.punishments_received.all().aggregate(s=Sum('amount')).get(
+            's') or 0) * Constants.punishment_factor
 
 
 class Punishment(djmodels.Model):

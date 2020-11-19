@@ -31,35 +31,8 @@
             participants. By transferring 1 point from your endowment you decrease the income of another
             participant by {{ Constants.punishment_factor }} points.
         </li>
-        <li>
-            <div id="app">
-                <div>
-                <vue-slider v-model="value"></vue-slider>
-                <vue-slider v-model="value2"></vue-slider>
-                    </div>
-            </div>
-            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vue-slider-component@latest/theme/default.css">
-            <script src="https://unpkg.com/vue@2.5.2/dist/vue.min.js"></script>
-            <script src="https://cdn.jsdelivr.net/npm/vue-slider-component@latest/dist/vue-slider-component.umd.min.js"></script>
-            <script>
-                new Vue({
-                    el: '#app',
-                    data(){
-                        return {
-                            value:0,
-
-                        }
-                    },
-                    computed:{
-                        value2: function() {
-                            return (100-this.value)
-                        }
-                    },
-                    components: {
-                        VueSlider: window['vue-slider-component']
-                    }
-                })
-            </script>
+        <li class="my-3">
+         {% include 'pggfg/includes/slider.html' %}
         </li>
     </ul>
 </div>
