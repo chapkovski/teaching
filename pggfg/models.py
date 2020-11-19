@@ -36,7 +36,7 @@ class Constants(BaseConstants):
 class Subsession(BaseSubsession):
     punishment = models.BooleanField()
 
-    def before_session_starts(self):
+    def creating_session(self):
         if 'punishment' in self.session.config:
             self.punishment = self.session.config['punishment']
         else:
@@ -54,9 +54,6 @@ class Subsession(BaseSubsession):
 
 
 class Group(BaseGroup):
-    # myjson = JSONField(null=True, doc="""json for saving punishment matrix.
-    # for the future implementations. now i am using postgres arrayfield which
-    # makes it impossible to use it with sqlite """)
 
     total_contribution = models.IntegerField()
     average_contribution = models.FloatField()

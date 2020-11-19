@@ -1,72 +1,87 @@
 {% extends 'otree/WaitPage.html' %}
-{% load i18n %}
-{% load staticfiles %}
+{% load otree i18n %}
 {% block internal_scripts %}
     {{ block.super }}
-    <!-- this is an HTML file rather than JavaScript static file because context variables need to be passed to it -->
 
     <script type="text/javascript">
         function heartbeat() {
-        var args = {
-            type: "GET",
-            url: '{% url "ParticipantRoomHeartbeat" view.tab_unique_id %}',
-            // necessary for IE
-            cache: false
-        };
-        $.ajax(args);
-    }
+            var args = {
+                type: "GET",
+                url: '{% url "ParticipantRoomHeartbeat" view.tab_unique_id %}',
+                // necessary for IE
+                cache: false
+            };
+            $.ajax(args);
+        }
 
-    var SECOND = 1000;
-    window.setInterval(heartbeat, 10 * SECOND);
+        var SECOND = 1000;
+        window.setInterval(heartbeat, 10 * SECOND);
     </script>
 
- {% endblock %}
+{% endblock %}
 
- {% block body_main %}
+{% block body_main %}
+    <div class="container">
+        <div class="row">
+            <div class="col">
+
+                <div class="card my-3  footer">
+                    <div class="card-body">
+                        <div class="media">
+                            <img src="{% static 'global/img/hse_logo.jpg' %}" class="align-self-center  " alt="hse_logo"
+                                 style="width: 200px; height:auto;">
+                            <div class="media-body  ">
+                                <p>{% trans 'Это исследование проводится' %}
+                                    <a href="http://www.hse.ru">{% trans 'НИУ "Высшая Школа Экономики", Москва' %}</a>.
+
+                                </p>
+
+                            </div>
 
 
-<div class="container" style='max-width:970px'>
-    <div class="panel panel-primary">
-<div class="forpadding">
+                        </div>
 
-
-                          <img alt='' src='https://www.hse.ru/data/2012/01/19/1263884289/logo_%D1%81_hse_cmyk_e.png'  />
-                          <div class='wrapper_rand'>
-                               <H3>Experimental games for SPB HSE 2019</H3>
-
-
-                          </div>
-</div>
-
-
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-</div>
+    {{ block.super }}
+{% endblock %}
 
-      {{ block.super }}
- {% endblock %}
+{% block styles %}
+    <style type="text/css">
+        .forpadding {
+            padding: 10px;
+        }
 
- {% block styles %}
-   <style type="text/css">
-   .forpadding{padding:10px;}
-    img, .wrapper_rand {
-        display: inline-block;
-         word-wrap: break-word;
-        vertical-align: middle;
+        img, .wrapper_rand {
+            display: inline-block;
+            word-wrap: break-word;
+            vertical-align: middle;
 
-    }
-    .wrapper_rand {
-        width: calc(100% - 300px);
-           text-align: center;
-    }
-    img {
-        width:256px;
-    }
-    @media only screen and (max-device-width: 480px) {
-     .wrapper_rand { display:inline; }
-    img  { display:block; margin: 0 auto;
-    margin-left:auto;;}
-    }
- </style>
- {% endblock %}
+        }
+
+        .wrapper_rand {
+            width: calc(100% - 300px);
+            text-align: center;
+        }
+
+        img {
+            width: 256px;
+        }
+
+        @media only screen and (max-device-width: 480px) {
+            .wrapper_rand {
+                display: inline;
+            }
+
+            img {
+                display: block;
+                margin: 0 auto;
+                margin-left: auto;;
+            }
+        }
+    </style>
+{% endblock %}
