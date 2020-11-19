@@ -1,0 +1,50 @@
+{% extends "global/Base.html" %}
+{% block title %}
+    Результаты
+{% endblock %}
+
+{% block content %}
+
+    </div>
+
+    <table class="table table-striped table-hover">
+        <tr>
+            <th>Вопрос</th>
+            <th>Ваш ответ</th>
+            <th>Средний ответ участников</th>
+        </tr>
+        {% for i in player.get_full_data %}
+
+            <tr>
+                <td>{{ i.description }}</td>
+                <td>{{ i.you }}</td>
+                <td>{{ i.average|floatformat }}</td>
+
+            </tr>
+
+        {% endfor %}
+    </table>
+    {% for foo in Constants.descriptions.keys %}
+        <div id="{{ foo }}" style="height: 300px; width: 100%"></div>
+    {% endfor %}
+
+
+    <div class="d-none">
+
+        {% next_button %}
+    </div>
+{% endblock %}
+
+
+{% block scripts %}
+
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/histogram-bellcurve.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+    {% for foo in player.get_data_for_chart %}
+        {% include 'dg/includes/HighChart.html' with data=foo title=foo.name render_to=foo.field %}
+
+    {% endfor %}
+
+{% endblock %}

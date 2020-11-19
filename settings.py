@@ -14,10 +14,10 @@ LANGUAGE_SESSION_KEY = '_language'
 
 SESSION_CONFIGS = [
     {
-        'name': 'dictatorMU',
+        'name': 'dg',
         'display_name': "Session 1. Dictator Game + beliefs",
-        'num_demo_participants': 1,
-        'app_sequence': ['dictatorMU'],
+        'num_demo_participants': 3,
+        'app_sequence': ['dg'],
     },
 
     {
@@ -32,7 +32,7 @@ SESSION_CONFIGS = [
         'name': 'combined_session',
         'display_name': "PGG+DG",
         'num_demo_participants': 3,
-        'app_sequence': ['dictatorMU','pggfg'],
+        'app_sequence': ['dg','pggfg'],
 
     },
 

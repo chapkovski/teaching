@@ -1,0 +1,76 @@
+{% extends "global/Page.html" %}
+{% block styles %}
+
+    <style>
+        .myimg {
+            height: 200px;
+            overflow: hidden;
+            border-color: #DADADA;
+            border-style: solid;
+            border-width: 0;
+            margin-bottom: 20px;
+        }
+
+        .myimg img {
+            display: block;
+            margin: auto;
+
+        }
+
+        .alert {
+            margin: 0;
+            padding: 0;
+        }
+
+        @media only screen and (max-device-width: 480px) {
+
+            img {
+                display: block;
+                margin: 0 auto;
+                margin-left: auto;;
+                width: 100%;
+                heigth: auto;
+            }
+        }
+    </style>
+
+{% endblock %}
+{% block title %}
+
+    Добро пожаловать
+{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-body">
+
+
+            <p>
+                Вы будете случайным образом объединены в пару с другим участниками исследования.
+                Вам будет случайным образом назначена роль либо <b>Отправителя</b>
+                либо <b>Получателем</b>. Если вас случайным образом назначили отправителем, вы можете
+                отправить
+                деньги Получателю.
+                Если вас случайным образом назначили Получателем, вы можете получить деньги,
+                которые вам пошлет Отправитель.
+
+            </p>
+
+
+            <div class="myimg">
+                <img height="200px" src="{% static "dg/0.png" %}"/>
+            </div>
+
+
+            В этом задании Отправитель получает {{ Constants.endowment }} баллов и может передать любую сумму от 0
+            до {{ Constants.endowment }} Получателю.
+
+            </p>
+
+
+        </div>
+    </div>
+    <div class="my-3">
+        {% next_button %}
+    </div>
+{% endblock %}

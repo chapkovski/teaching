@@ -1,0 +1,70 @@
+{% extends "global/Base.html" %} {% load otree_tags %}
+{% load staticfiles %}
+{% block styles %}
+
+    <link href="{% static "dg/css/style.css" %}" rel="stylesheet">
+    <style>
+        .myimg {
+            height: 200px;
+            overflow: hidden;
+            border-color: #DADADA;
+            border-style: solid;
+            border-width: 0;
+            margin-bottom: 20px;
+        }
+
+        .myimg img {
+            display: block;
+            margin: auto;
+
+        }
+
+        .alert {
+            margin: 0;
+            padding: 0;
+        }
+
+        @media only screen and (max-device-width: 480px) {
+
+            img {
+                display: block;
+                margin: 0 auto;
+                margin-left: auto;;
+                width: 100%;
+                heigth: auto;
+            }
+        }
+    </style>
+{% endblock %}
+{% block title %}
+
+
+
+{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-body">
+
+
+            {% for field in form %}
+
+                <div class="myimg">
+                    {% with 'dg/'|add:field.field.image|add:'.png' as image_static %}
+                        <img height="200px" src="  {% static image_static %}"/>
+                    {% endwith %}
+
+                </div>
+
+
+                {% autoescape off %}  <strong>  {{ field.label }}</strong> {% endautoescape %}
+
+                {{ field }}
+            {% endfor %}
+
+        </div>
+    </div>
+    <div class="my-3">
+        {% next_button %}
+    </div>
+{% endblock %}

@@ -1,0 +1,77 @@
+<script type="text/javascript">
+
+
+    var chart = new Highcharts.Chart({
+        chart: {
+            renderTo: {{ render_to|json }},
+            marginBottom: 80
+        },
+        exporting:{enabled:false},
+        credits:{enabled:false},
+        title: {
+            text: {{ title|json }},
+        },
+        xAxis: [{
+            title: {text: ''},
+            alignTicks: false,
+            visible: false,
+        }, {
+            title: {text: ''},
+            alignTicks: false,
+            visible: true,
+            plotLines: [{
+
+                color: 'red', // Red
+                width: 3,
+                zIndex: 100,
+                value: {{ data.my_own|json }}
+            },
+            {
+
+                color: 'white', // Red
+                width: 5,
+                zIndex: 99,
+                value: {{ data.my_own|json }}
+            }],
+
+            opposite: true,
+            labels: {
+                formatter() {
+
+                    return ''
+                }
+            }
+        }],
+
+        yAxis: [{
+            title: {text: 'Data'}
+        }, {
+            title: {text: 'Histogram'},
+            opposite: true
+        }],
+        legend: {enabled: false},
+        plotOptions: {},
+
+
+        series: [{
+            name: 'Histogram',
+            type: 'histogram',
+            xAxis: 1,
+            yAxis: 1,
+            baseSeries: 's1',
+            zIndex: -1,
+            color:{{ data.color|json }}
+        }, {
+            name: {{ data.name|json }},
+            type: 'scatter',
+            data: {{ data.data|json }},
+            id: 's1',
+            marker: {
+                radius: 5,
+                fillColor: 'blue',
+
+
+            }
+        }]
+    });
+</script>

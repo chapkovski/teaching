@@ -1,0 +1,33 @@
+<table class="table table-striped table-hover">
+    <tr>
+        <th>Вопрос</th>
+        <th>Средний ответ</th>
+    </tr>
+    {% for i in  subsession.get_desc_data  %}
+
+        <tr>
+            <td>{{ i.description }}</td>
+
+            <td>{{ i.average|floatformat }}</td>
+
+        </tr>
+
+    {% endfor %}
+</table>
+
+    {% for foo in Constants.descriptions.keys %}
+        <div id="{{ foo }}" style="height: 300px; width: 100%"></div>
+    {% endfor %}
+
+
+{% block scripts %}
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/histogram-bellcurve.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+    {% for foo in subsession.get_data %}
+        {% include 'dg/includes/HighChart.html' with data=foo title=foo.name render_to=foo.field %}
+
+    {% endfor %}
+
+{% endblock %}
