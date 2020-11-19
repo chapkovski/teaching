@@ -1,0 +1,32 @@
+{% extends "global/Base.html" %}
+{% load staticfiles otree_tags %}
+
+{% block title %}
+    Results  (Period {{ subsession.round_number }} of {{ Constants.num_rounds }})
+{% endblock %}
+
+{% block content %}
+
+<div class="panel-body">
+  <table class="table table-hover table-striped table-responsive table-bordered">
+
+
+  <tbody>
+
+    <tr class="danger">
+      <td>Your payoff in this round:</td><td id="filka">  </td>
+      <td><b>{{player.payoff|c}}</b></td>
+
+    </tr>
+  </tbody>
+</table></div>
+
+{% include 'pggfg/resultschart.html' %}
+{% include 'pggfg/resultstable.html' %}
+
+    {% next_button %}
+
+
+
+
+{% endblock %}

@@ -1,0 +1,57 @@
+{% load staticfiles otree_tags %}
+{% block styles %}
+
+  <style>
+  td#filka{ width:20px;font-weight: bold;font-size: 120%;}</style>
+
+{% endblock %}
+
+  <div class="panel-body">
+    <table class="table table-hover table-striped table-responsive table-bordered">
+
+  <thead  class="thead-default">
+    <tr class="bg-primary">
+
+      <th>Round</th>
+      <td id="filka"></td>
+      <th>{{subsession.round_number}}</th>
+    </tr>
+  </thead>
+    <tbody>
+      <tr class="success">
+        <td>Your endowment:</td><td id="filka"></td>
+        <td><strong>{{ Constants.endowment|c}}</strong></td>
+
+      </tr>
+
+      <tr class="warning">
+        <td>You contributed:</td><td id="filka"> - </td>
+        <td><strong>{{ player.contribution|c}}</strong></td>
+
+      </tr>
+      <tr class="">
+        <td>Other participants contributed:</td><td id="filka"></td>
+        <td>{{player.profit1}}</td>
+        {% for p in player.get_others_in_group %}
+            <tr><td><i>Participant {{p.id_in_group}}:</i></td><td id="filka"></td><td>{{ p.contribution|c }}</td></tr>
+        {% endfor %}
+        <tr><td>Total contribution:</td><td id="filka"></td><td>{{ group.total_contribution|c }}</td></tr>
+
+
+
+        <tr><td>Total earnings from the project:</td><td id="filka"></td><td>{{ total_earnings|c }}</td></tr>
+        <tr class="success"><td>Your earnings from the project:</td><td id="filka"> + </td><td><b>{{ group.individual_share }}</b></td></tr>
+
+        {% if subsession.punishment %}
+
+              <tr class="warning"><td>Punishment you sent:</td><td id="filka"> - </td><td><b>{{ player.punishment_sent|c }}</b></td></tr>
+              <tr class="warning"><td>Punishment you received:</td><td id="filka"> - </td><td><b>{{ player.punishment_received|c }}</b></td></tr>
+        {% endif %}
+
+      <tr class="danger">
+        <td>Your payoff in this round:</td><td id="filka"> = </td>
+        <td><b>{{player.payoff}}</b></td>
+
+      </tr>
+    </tbody>
+  </table></div>

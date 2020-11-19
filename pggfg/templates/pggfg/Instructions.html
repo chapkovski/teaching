@@ -1,24 +1,65 @@
-{% load otree_tags staticfiles %}
-
 <div class="instructions well well-lg">
 
+    <p>The game consists of two stages:</p>
+    <ul>
+        <li>
+            <p>
+                In the beginning of the <b>first</b> stage each round every participant in your group
+                of {{ Constants.players_per_group }}
+                receives <strong>{{ Constants.endowment|c }}</strong>. The group
+                has the opportunity to undertake a joint project. Each participant in
+                the group decides how much she or he is going to contribute to
+                the project. Contribution could be any integer from <strong>0
+                to {{ Constants.endowment|c }}</strong>.
+            </p>
+            <p>
+                The earnings from the project are calculated as follows: The
+                contributions of all <strong>{{ Constants.players_per_group }}</strong> participants are
+                added up, the total contribution
+                is multiplied by a factor of <strong>{{ Constants.efficiency_factor }}</strong>, and the
+                resulting amount is the total earnings from the project, which is
+                evenly split among all <strong>{{ Constants.players_per_group }}</strong>
+                participants. Your payoff equals your earnings from the project, plus
+                the amount you did not contribute.
+            </p>
+        </li>
+        <li>
+            In the second stage you can see the decisions and other participants in the your group,
+            You can transfer up to <strong>{{ Constants.punishment_endowment }} points </strong> from your endowment to
+            decrease the
+            income of these
+            participants. By transferring 1 point from your endowment you decrease the income of another
+            participant by {{ Constants.punishment_factor }} points.
+        </li>
+        <li>
+            <div id="app">
+                <div>
+                <vue-slider v-model="value"></vue-slider>
+                <vue-slider v-model="value2"></vue-slider>
+                    </div>
+            </div>
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vue-slider-component@latest/theme/default.css">
+            <script src="https://unpkg.com/vue@2.5.2/dist/vue.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/vue-slider-component@latest/dist/vue-slider-component.umd.min.js"></script>
+            <script>
+                new Vue({
+                    el: '#app',
+                    data(){
+                        return {
+                            value:0,
 
-    <p>
-        In this study, you will be in a randomly formed group
-        of <b>{{ Constants.players_per_group }}</b> participants. Each participant in
-        the group is given <strong>{{ Constants.endowment|c}}</strong>. The group
-        has the opportunity to undertake a joint project. Each participant in
-        the group decides how much she or he is going to contribute to
-        the project. Contribution could be any integer from <strong>0
-        to {{ Constants.endowment|c}}</strong>.
-    </p>
-    <p>
-        The earnings from the project are calculated as follows: The
-        contributions of all <strong>{{ Constants.players_per_group }}</strong> participants are
-        added up, the total contribution
-        is multiplied by a factor of <strong>{{ Constants.efficiency_factor }}</strong>, and the
-        resulting amount is the total earnings from the project, which is
-        evenly split among all <strong>{{ Constants.players_per_group }}</strong>
-        participants. Your payoff equals your earnings from the project, plus
-        the amount you did not contribute.
-    </p></div>
+                        }
+                    },
+                    computed:{
+                        value2: function() {
+                            return (100-this.value)
+                        }
+                    },
+                    components: {
+                        VueSlider: window['vue-slider-component']
+                    }
+                })
+            </script>
+        </li>
+    </ul>
+</div>

@@ -1,156 +1,62 @@
-from . import models
-from ._builtin import Page, WaitPage
-from otree.api import Currency as c, currency_range
-# from otree.api import models as m
-from .models import Constants
-from otree.common import safe_json
-
-from otree.api import widgets
-from django.forms import modelform_factory
-from django import forms
-import json
-from .functions import preparing_charts
-import random
+from otree.models import Session
+from django.views.generic import TemplateView, ListView
+from django.shortcuts import render
+from .models import Punishment
+from django.http import HttpResponse
+from django.template import Context, loader
 
 
-class PunishmentForm(forms.Form):
+# the view to get a list of all sessions
+class AllSessionsList(TemplateView):
+    template_name = 'pggfg_export/all_session_list.html'
+    url_name = 'pggfg_sessions_list'
+    url_pattern = r'^pggfg_sessions_list/$'
+    display_name = 'Exporting punishment data from PGGFG'
 
-    def __init__(self, fields_to_add, *args, **kwargs):
-        super(PunishmentForm, self).__init__(*args, **kwargs)
+    def get(self, request, *args, **kwargs):
+        candidates_list = Punishment.objects.filter(amount__isnull=False).values_list('sender__session', flat=True)
 
-        # CHOICES = (("True", True), ("False", False))
-        for f in fields_to_add:
-            self.fields[f] = forms.IntegerField()
-
-
-class NickNameRequest(Page):
-    form_model = models.Player
-    form_fields = ['nickname']
-
-    def is_displayed(self):
-        return (self.subsession.round_number == 1
-                and self.session.config['nickname'])
+        all_sessions = Session.objects.filter(id__in=candidates_list)
+        pggfg_sessions = [i for i in all_sessions if 'pggfg' in i.config['app_sequence']]
+        return render(request, self.template_name, {'sessions': pggfg_sessions})
 
 
-class Introduction(Page):
-    """Description of the game: How to play and returns expected"""
-    def is_displayed(self):
-        return self.subsession.round_number == 1
+class ListPunishmentsView(ListView):
+    template_name = 'pggfg_export/punishments_list.html'
+    url_name = 'punishments_list'
+    url_pattern = r'^session/(?P<pk>[a-zA-Z0-9_-]+)/punishments/$'
+    model = Punishment
+    context_object_name = 'punishments'
+
+    def get_queryset(self):
+        session_code = self.kwargs['pk']
+        return Punishment.objects.filter(sender__session__code=session_code,
+                                         amount__isnull=False)
 
 
-class Contribute(Page):
-    """Player: Choose how much to contribute"""
+class PunishmentCSVExport(TemplateView):
+    template_name = 'pggfg_export/punishments.txt'
+    url_name = 'punishments_export'
+    url_pattern = r'^session/(?P<pk>[a-zA-Z0-9_-]+)/punishments_export/$'
+    response_class = HttpResponse
+    content_type = 'text/csv'
 
-    form_model = models.Player
-    form_fields = ['contribution']
-    timeout_submission = {'contribution':
-                          random.randint(0, Constants.endowment)}
-
-
-class ContributionWaitPage(WaitPage):
-    """Waiting till all players make their decisions about the contribution"""
-    body_text = "Waiting for other participants to contribute."
-
-
-class Punishment(Page):
-    """here the decision to punish the peers is taken"""
-    form_model = models.Player
-
-    def is_displayed(self):
-        return self.subsession.punishment
-
-    def vars_for_template(self):
-
-        others = self.player.get_others_in_group()
-        contribs_to_show = [p.contribution for p in others]
-        verbose_names = ['Participant {}'.format(p.id_in_group)
-                         for p in others]
-        fields_to_show = self.get_form_fields()
-        punishmentform = PunishmentForm(fields_to_show)
-        return {'abclist': zip(punishmentform,
-                               contribs_to_show,
-                               verbose_names),
-                'form': punishmentform, }
-
-    def get_form_fields(self):
-        others = self.player.get_others_in_group()
-        fields_to_show = ['punishP{}'.format(p.id_in_group) for p in others]
-        return fields_to_show
-
-    """Participants take decision whether to detect the smallest contributor"""
-    def before_next_page(self):
-        punishmentvector = []
-        for i in range(Constants.players_per_group):
-            f = self.player._meta.get_field("punishP{}".format(i+1))
-            punishmentvector.append(getattr(self.player, f.name) or 0)
-
-        curpunishmentmatrix = list(self.group.punishmentmatrix)
-        curpunishmentmatrix[self.player.id_in_group-1] = punishmentvector
-        self.group.punishmentmatrix = curpunishmentmatrix
-
-
-class PunishmentWaitPage(WaitPage):
-    """Waiting for the group to finish the punishment stage before
-    showing them results"""
-    def is_displayed(self):
-        return self.subsession.punishment
-
-    def after_all_players_arrive(self):
-        for p in self.group.get_players():
-            p.punishment_sent = sum(
-                                    self.group.punishmentmatrix
-                                    [p.id_in_group-1])
-            p.punishment_received = Constants.punishment_factor*sum(row[p.id_in_group-1]
-                                        for row in self.group.punishmentmatrix)
-
-
-class ResultsWaitPage(WaitPage):
-    # not the best solution, but suitable for didactical reasons:
-    # so all the players can see all others in entire population
-    # wait_for_all_groups = True
-    def after_all_players_arrive(self):
-        self.group.set_payoffs()
+    def get(self, request, *args, **kwargs):
+        ...
+        response = HttpResponse(content_type='text/csv')
+        session_code = self.kwargs['pk']
+        filename = '{}_punishment_data.csv'.format(session_code)
+        response['Content-Disposition'] = 'attachment; filename="{}"'.format(filename)
+        punishments = Punishment.objects.filter(sender__session__code=session_code,
+                                                amount__isnull=False)
+        t = loader.get_template(self.template_name)
+        c = {
+            'punishments': punishments,
+        }
+        response.write(t.render(c))
+        return response
 
 
 
-class Results(Page):
-    """Players payoff: How much each has earned in this round"""
-    def is_displayed(self):
-        return self.subsession.round_number < Constants.num_rounds
 
-    def vars_for_template(self):
-        return {'highcharts_series': preparing_charts(me=self.player),
-                'total_earnings': Constants.efficiency_factor*self.group.total_contribution,
-                }
-
-
-class FinalWaitPage(WaitPage):
-    wait_for_all_groups = True
-
-    def is_displayed(self):
-        return self.subsession.round_number == Constants.num_rounds
-
-
-class FinalResults(Page):
-    """Final earnings are shown"""
-    def is_displayed(self):
-        return self.subsession.round_number == Constants.num_rounds
-
-    def vars_for_template(self):
-        return {
-        'highcharts_series': preparing_charts(final=True, me=self.player),
-        'total_earnings': self.group.total_contribution*Constants.efficiency_factor, }
-
-
-page_sequence = [
-    NickNameRequest,
-    Introduction,
-    Contribute,
-    ContributionWaitPage,
-    Punishment,
-    PunishmentWaitPage,
-    ResultsWaitPage,
-    Results,
-    FinalWaitPage,
-    FinalResults,
-]
+        # return render(request, self.template_name, {'sessions': all_sessions })

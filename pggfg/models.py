@@ -2,117 +2,90 @@ from otree.api import (
     models, widgets, BaseConstants, BaseSubsession, BaseGroup, BasePlayer,
     Currency as c, currency_range
 )
-import random
-from os import environ
-# from settings import SESSION_CONFIGS
-from django.contrib.postgres.fields import ArrayField
-from django import forms
-from .functions import preparing_charts
-# for the future implementation of matrix - jsonfield (now just postgres
-# ArrayField)
-# from otree.db.serializedfields import JSONField
+
+from django.db import models as djmodels
+
+author = "Philip Chapkovski, chapkovski@gmail.com"
 
 doc = """
-public good game with some variations depending on session configs:
-- punishment stage (for session 4)
-- collective sanctions (for session 7)
+Public Good Game with Punishment (Fehr and Gaechter).
+Fehr, E. and Gachter, S., 2000.
+ Cooperation and punishment in public goods experiments. American Economic Review, 90(4), pp.980-994.
 """
 
 
 class Constants(BaseConstants):
     name_in_url = 'pggfg'
-    players_per_group = int(environ.get('PGG_SIZE',4))
+    players_per_group = 3
     num_others_per_group = players_per_group - 1
-    num_rounds = 10
-
+    num_rounds = 20
     instructions_template = 'pggfg/Instructions.html'
-
-    endowment = 100
-    efficiency_factor = 2
+    endowment = 20
+    efficiency_factor = 1.6
+    punishment_endowment = 10
     punishment_factor = 3
-    punishment_limit = int(endowment/punishment_factor)
+
+
+from django.db.models import Q, F
 
 
 class Subsession(BaseSubsession):
-    punishment = models.BooleanField()
-
     def creating_session(self):
-        if 'punishment' in self.session.config:
-            self.punishment = self.session.config['punishment']
-        else:
-            self.punishment = False
-
-        for g in self.get_groups():
-
-            g.punishmentmatrix = [[0 for i in g.get_players()]
-                                  for i in g.get_players()]
-
-    def vars_for_admin_report(self):
-        contributions = [p.contribution for p in self.get_players()
-                         if p.contribution is not None]
-        return {'highcharts_series': preparing_charts(final=True,me=self, isSubsession=True), }
+        ps = []
+        for p in self.get_players():
+            for o in p.get_others_in_group():
+                ps.append(Punishment(sender=p, receiver=o, ))
+        Punishment.objects.bulk_create(ps)
 
 
 class Group(BaseGroup):
-
     total_contribution = models.IntegerField()
     average_contribution = models.FloatField()
     individual_share = models.CurrencyField()
-    punishmentmatrix = ArrayField(
-        ArrayField(
-            models.IntegerField(),
-            size=Constants.players_per_group,
-            null=True,
-        ),
-        size=Constants.players_per_group,
-        null=True,
-        # doc="""not the best solution to store the punishment matrix.
-        # in the future it is better to switch to database-independentJSONField
-        # provided by otree."""
-    )
 
-    def set_payoffs(self):
+    def set_pd_payoffs(self):
         self.total_contribution = sum([p.contribution for p in self.get_players()])
-        self.average_contribution = self.total_contribution/ Constants.players_per_group
+        self.average_contribution = self.total_contribution / Constants.players_per_group
         self.individual_share = self.total_contribution * Constants.efficiency_factor / Constants.players_per_group
         for p in self.get_players():
-            # if punishment_sent or _received is not defined then use 0 -
-            # for treatment without punishment
-            p.payoff = sum([+ Constants.endowment,
-                           - p.contribution,
-                           + self.individual_share,
-                           - (p.punishment_sent or 0),
-                           - (p.punishment_received or 0), ])
-            p.cumulative_payoff = sum([me.payoff for me in
-                                      p.in_all_rounds()])
+            p.pd_payoff = sum([+ Constants.endowment,
+                               - p.contribution,
+                               + self.individual_share,
+                               ])
+            p.set_punishment_endowment()
+
+    def set_punishments(self):
+        for p in self.get_players():
+            p.set_punishment()
+        for p in self.get_players():
+            p.set_payoff()
 
 
 class Player(BasePlayer):
-    nickname = models.CharField(max_length=100,
-                                verbose_name='Please enter your nickname',
-                                help_text='(Any unique nickname works. It will help us to identify the winner)')
-    cumulative_payoff = models.FloatField(initial=0)
-    punishment_sent = models.IntegerField()
-    punishment_received = models.IntegerField()
     contribution = models.PositiveIntegerField(
         min=0, max=Constants.endowment,
         doc="""The amount contributed by the player""",
-        widget=forms.NumberInput(attrs={'class': 'form-control ',
-                                        'required': 'required',
-                                        'min': 0, 'max': Constants.endowment,
-                                        'autofocus': 'autofocus', })
+        label="How much will you contribute to the project (from 0 to {})?".format(Constants.endowment)
     )
+    punishment_sent = models.IntegerField()
+    punishment_received = models.IntegerField()
+    pd_payoff = models.CurrencyField(doc='to store payoff from contribution stage')
+    punishment_endowment = models.IntegerField(initial=0, doc='punishment endowment')
+
+    def set_payoff(self):
+        self.payoff = self.pd_payoff - self.punishment_sent - self.punishment_received
+
+    def set_punishment_endowment(self):
+        assert self.pd_payoff is not None, 'You have to set pd_payoff before setting punishment endowment'
+        self.punishment_endowment = min(self.pd_payoff, Constants.punishment_endowment)
+
+    def set_punishment(self):
+        self.punishment_sent = sum([i.amount for i in self.punishments_sent.all()])
+        self.punishment_received = sum(
+            [i.amount for i in self.punishments_received.all()]) * Constants.punishment_factor
 
 
-for i in range(Constants.players_per_group):
-    Player.add_to_class("punishP{}".format(i+1),
-                        models.IntegerField(
-            verbose_name="Participant {}".format(i+1),
-            min=0,
-            max=Constants.endowment,
-            widget=forms.NumberInput(attrs={'class': 'form-control ',
-                                            'required': 'required',
-                                            'min': 0,
-                                            'max': Constants.punishment_limit,
-                                            'autofocus': 'autofocus', })
-        ))
+class Punishment(djmodels.Model):
+    sender = djmodels.ForeignKey(to=Player, related_name='punishments_sent', on_delete=djmodels.CASCADE)
+    receiver = djmodels.ForeignKey(to=Player, related_name='punishments_received', on_delete=djmodels.CASCADE)
+    amount = models.IntegerField(min=0)
