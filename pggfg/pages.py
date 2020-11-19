@@ -23,9 +23,8 @@ class AfterContribWP(WaitPage):
 
 
 class Punishment(Page):
-    def post(self):
-        print(self.request.POST)
-        return super().post()
+    def is_displayed(self):
+        return self.subsession.punishment
 
     def get_formset(self, data=None):
         return PFormset(instance=self.player,
@@ -56,7 +55,7 @@ class Results(Page):
 
 
 page_sequence = [
-    Intro,
+    # Intro,
     Contribute,
     AfterContribWP,
     Punishment,

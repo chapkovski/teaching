@@ -4,8 +4,9 @@ from otree.api import (
 )
 
 from django.db import models as djmodels
+from django.db.models import Sum
 
-author = "Philip Chapkovski, chapkovski@gmail.com"
+author = "Philip Chapkovski, HSE-Moscow, chapkovski@gmail.com"
 
 doc = """
 Public Good Game with Punishment (Fehr and Gaechter).
@@ -18,19 +19,20 @@ class Constants(BaseConstants):
     name_in_url = 'pggfg'
     players_per_group = 3
     num_others_per_group = players_per_group - 1
-    num_rounds = 20
+    num_rounds = 2
     instructions_template = 'pggfg/Instructions.html'
     endowment = 20
     efficiency_factor = 1.6
     punishment_endowment = 10
     punishment_factor = 3
-
-
-from django.db.models import Q, F
+    punishment_rounds = [2]
 
 
 class Subsession(BaseSubsession):
+    punishment = models.BooleanField()
+
     def creating_session(self):
+        self.punishment = self.round_number in Constants.punishment_rounds
         ps = []
         for p in self.get_players():
             for o in p.get_others_in_group():
@@ -80,9 +82,8 @@ class Player(BasePlayer):
         self.punishment_endowment = min(self.pd_payoff, Constants.punishment_endowment)
 
     def set_punishment(self):
-        self.punishment_sent = sum([i.amount for i in self.punishments_sent.all()])
-        self.punishment_received = sum(
-            [i.amount for i in self.punishments_received.all()]) * Constants.punishment_factor
+        self.punishment_sent = self.punishments_sent.all().aggregate(s=Sum('amount')).get('s') or 0
+        self.punishment_received = self.punishments_received.all().aggregate(s=Sum('amount')).get('s') or 0
 
 
 class Punishment(djmodels.Model):
