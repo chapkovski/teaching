@@ -7,6 +7,10 @@ from otree.constants import timeout_happened
 
 
 class FirstWP(WaitPage):
+
+    def is_displayed(self):
+        return self.subsession.round_number == 1
+
     group_by_arrival_time = True
 
 
