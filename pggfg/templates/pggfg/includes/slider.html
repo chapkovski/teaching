@@ -3,13 +3,13 @@
         <div class="card-body mt-3">
             <h5 class="text-center">Если вы вложите:</h5>
             <div>
-            <vue-slider   class='mb-3' v-model="yourOwn" min="0" :max="endowment" :marks="marks"></vue-slider>
+            <vue-slider   class='mb-3' :tooltip="'always'" :tooltip-placement="'top'" v-model="yourOwn" min="0" :max="endowment" :marks="marks"></vue-slider>
                 </div>
-            <h5 class="text-center">А 2 других участника вложат:</h5>
+            <h5 class="text-center">А {{ Constants.num_others_per_group }} других участника вложат:</h5>
 
-            <vue-slider class="mb-5" v-model="other" min="0" :max="endowment" :marks="marks"></vue-slider>
+            <vue-slider class="mb-5" :tooltip="'always'" :tooltip-placement="'top'" v-model="other" min="0" :max="endowment" :marks="marks"></vue-slider>
 
-            <div class="border my-3 p-3 lead text-center">Ваш доход в этом периоде составит <b>[[payoff.toFixed(0)]]</b>
+            <div class="border my-3 p-3 lead text-center">Ваш доход в этом периоде составит: <b>[[payoff.toFixed(0)]]</b>
             </div>
             <div class="border p-3 lead text-center">Средний доход остальных участников в этом периоде составит: <b>[[otherPayoff.toFixed(0)]]</b>
             </div>

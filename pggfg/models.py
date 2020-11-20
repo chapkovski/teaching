@@ -31,63 +31,63 @@ class Constants(BaseConstants):
 class Subsession(BaseSubsession):
     punishment = models.BooleanField()
 
-    def creating_session(self):
-        self.punishment = self.round_number in Constants.punishment_rounds
-        ps = []
-        for p in self.get_players():
-            for o in p.get_others_in_group():
-                ps.append(Punishment(sender=p, receiver=o, ))
-        Punishment.objects.bulk_create(ps)
+    def round_numbers(self):
+        return self.session.pggfg_subsession.all().values_list['round_number', flat=True]
 
+        def creating_session(self):
+            self.punishment = self.round_number in Constants.punishment_rounds
+            ps = []
+            for p in self.get_players():
+                for o in p.get_others_in_group():
+                    ps.append(Punishment(sender=p, receiver=o, ))
+            Punishment.objects.bulk_create(ps)
 
-class Group(BaseGroup):
-    total_contribution = models.IntegerField()
-    average_contribution = models.FloatField()
-    individual_share = models.CurrencyField()
+    class Group(BaseGroup):
+        total_contribution = models.IntegerField()
+        average_contribution = models.FloatField()
+        individual_share = models.CurrencyField()
 
-    def set_pd_payoffs(self):
-        self.total_contribution = sum([p.contribution for p in self.get_players()])
-        self.average_contribution = self.total_contribution / Constants.players_per_group
-        self.individual_share = self.total_contribution * Constants.efficiency_factor / Constants.players_per_group
-        for p in self.get_players():
-            p.pd_payoff = sum([+ Constants.endowment,
-                               - p.contribution,
-                               + self.individual_share,
-                               ])
-            p.set_punishment_endowment()
+        def set_pd_payoffs(self):
+            self.total_contribution = sum([p.contribution for p in self.get_players()])
+            self.average_contribution = self.total_contribution / Constants.players_per_group
+            self.individual_share = self.total_contribution * Constants.efficiency_factor / Constants.players_per_group
+            for p in self.get_players():
+                p.pd_payoff = sum([+ Constants.endowment,
+                                   - p.contribution,
+                                   + self.individual_share,
+                                   ])
+                p.set_punishment_endowment()
 
-    def set_punishments(self):
-        for p in self.get_players():
-            p.set_punishment()
-        for p in self.get_players():
-            p.set_payoff()
+        def set_punishments(self):
+            for p in self.get_players():
+                p.set_punishment()
+            for p in self.get_players():
+                p.set_payoff()
 
+    class Player(BasePlayer):
+        contribution = models.PositiveIntegerField(
+            min=0, max=Constants.endowment,
+            doc="""The amount contributed by the player""",
+            label="How much will you contribute to the project (from 0 to {})?".format(Constants.endowment)
+        )
+        punishment_sent = models.IntegerField()
+        punishment_received = models.IntegerField()
+        pd_payoff = models.CurrencyField(doc='to store payoff from contribution stage')
+        punishment_endowment = models.IntegerField(initial=0, doc='punishment endowment')
 
-class Player(BasePlayer):
-    contribution = models.PositiveIntegerField(
-        min=0, max=Constants.endowment,
-        doc="""The amount contributed by the player""",
-        label="How much will you contribute to the project (from 0 to {})?".format(Constants.endowment)
-    )
-    punishment_sent = models.IntegerField()
-    punishment_received = models.IntegerField()
-    pd_payoff = models.CurrencyField(doc='to store payoff from contribution stage')
-    punishment_endowment = models.IntegerField(initial=0, doc='punishment endowment')
+        def set_payoff(self):
+            self.payoff = self.pd_payoff - self.punishment_sent - self.punishment_received
 
-    def set_payoff(self):
-        self.payoff = self.pd_payoff - self.punishment_sent - self.punishment_received
+        def set_punishment_endowment(self):
+            assert self.pd_payoff is not None, 'You have to set pd_payoff before setting punishment endowment'
+            self.punishment_endowment = min(self.pd_payoff, Constants.punishment_endowment)
 
-    def set_punishment_endowment(self):
-        assert self.pd_payoff is not None, 'You have to set pd_payoff before setting punishment endowment'
-        self.punishment_endowment = min(self.pd_payoff, Constants.punishment_endowment)
+        def set_punishment(self):
+            self.punishment_sent = self.punishments_sent.all().aggregate(s=Sum('amount')).get('s') or 0
+            self.punishment_received = (self.punishments_received.all().aggregate(s=Sum('amount')).get(
+                's') or 0) * Constants.punishment_factor
 
-    def set_punishment(self):
-        self.punishment_sent = self.punishments_sent.all().aggregate(s=Sum('amount')).get('s') or 0
-        self.punishment_received = (self.punishments_received.all().aggregate(s=Sum('amount')).get(
-            's') or 0) * Constants.punishment_factor
-
-
-class Punishment(djmodels.Model):
-    sender = djmodels.ForeignKey(to=Player, related_name='punishments_sent', on_delete=djmodels.CASCADE)
-    receiver = djmodels.ForeignKey(to=Player, related_name='punishments_received', on_delete=djmodels.CASCADE)
-    amount = models.IntegerField(min=0)
+    class Punishment(djmodels.Model):
+        sender = djmodels.ForeignKey(to=Player, related_name='punishments_sent', on_delete=djmodels.CASCADE)
+        receiver = djmodels.ForeignKey(to=Player, related_name='punishments_received', on_delete=djmodels.CASCADE)
+        amount = models.IntegerField(min=0)

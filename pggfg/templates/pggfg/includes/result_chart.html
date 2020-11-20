@@ -1,0 +1,17 @@
+<div id="results-container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+<script src="//code.highcharts.com/highcharts.js"></script>
+
+<script>
+    $(function () {
+        Highcharts.chart('results-container', {
+            title: {
+                text: 'Средний вклад'
+            },
+            xAxis: {
+                categories: {{ subsession.round_numbers }},
+                title: {text: 'Round'}
+            },
+            series: [{{ highcharts_series|json }}]
+        });
+    });
+</script>
