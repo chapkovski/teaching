@@ -1,4 +1,7 @@
-# Social norms, control and punishment
+# Introduction to expermental methods
 
-The set of the following pretty standard games are intended for the course in UZH taught by Heiko Rauhut and Philipp
-Chapkovski in Spring 2017.
+## Social norms, control and punishment
+
+### Vladivostok-Moscow Nov 20
+
+The set of the  standard games for Vladivostok workshop 
