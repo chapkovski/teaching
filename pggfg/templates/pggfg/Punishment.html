@@ -1,28 +1,11 @@
 {% extends "global/Page.html" %}
-{% load otree %}
 
 {% block title %}
-    Deduction stage (Period {{ subsession.round_number }} of
-    {{ Constants.num_rounds }})
+    Решение о штрафах (Период {{ subsession.round_number }}/{{ Constants.num_rounds }})
 {% endblock %}
 
 {% block content %}
-
-    <div class="card">
-        <div class="card-header">
-            <b> Instructions for stage 2</b>
-        </div>
-        <div class="card-body">
-
-            In this stage you can see the decisions and other participants in the your group,
-            You can transfer up to <strong>{{ player.punishment_endowment }} points </strong> from your endowment to
-            decrease the
-            income of these
-            participants. By transferring 1 point from your endowment you decrease the income of another
-            participant by {{ Constants.punishment_factor }} points.
-
-        </div>
-    </div>
+ {% include 'pggfg/includes/instructions_second.html' %}
 
 
 
@@ -38,16 +21,16 @@
         {{ form.management_form }}
         <thead>
         <tr>
-            <th>Player:</th>
-            <th>Contibution</th>
-            <th>Deduction tokens</th>
-            <th>Effect on their payoff:</th>
+            <th>Участник:</th>
+            <th>Вклад</th>
+            <th>Размер штрафа</th>
+            <th>Их доход уменьшится на:</th>
         </tr>
         </thead>
 
         {% for f in form.forms %}
             <tr>
-                <td class="text-nowrap">Player {{ forloop.counter }}</td>
+                <td class="text-nowrap">Участник {{ forloop.counter }}</td>
                 <td class="text-center">{{ f.instance.receiver.contribution }}</td>
                 <td>{% formfield f.amount label='' %}</td>
                 {% for hidden in f.hidden_fields %}
@@ -68,6 +51,12 @@
         .table {
             display: table !important
         }
+        .form-group{
+            margin-bottom: 0px;
+        }
+    .table td{
+        vertical-align: middle;
+    }
     </style>
 {% endblock %}
 
@@ -81,14 +70,15 @@
             $('div.field-amount input').on('input', function () {
                 var curvalue = $(this).val();
                 if (curvalue < min_val) {
-                    $(this).val( min_val);
-                };
+                    $(this).val(min_val);
+                }
+                ;
                 if (curvalue > max_val) {
-                    $(this).val( max_val);
+                    $(this).val(max_val);
                 }
                 var curvalue = $(this).val();
-                var punishment_sent = -curvalue * pun_factor;
-                $('td#' + $(this).attr('id')).html(punishment_sent);
+                var punishment_sent = curvalue * pun_factor;
+                $('td#' + $(this).attr('id')).html(punishment_sent + " токенов");
             })
         });
     </script>

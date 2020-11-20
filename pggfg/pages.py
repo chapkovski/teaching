@@ -6,11 +6,20 @@ from .models import Constants, Player, Punishment as PunishmentModel
 from otree.constants import timeout_happened
 
 
-class Intro(Page):
-    template_name = 'pggfg/Introduction.html'
+class FirstWP(WaitPage):
+    group_by_arrival_time = True
+
+
+class Introduction(Page):
 
     def is_displayed(self):
         return self.subsession.round_number == 1
+
+
+class PunishmentIntroduction(Page):
+
+    def is_displayed(self):
+        return self.subsession.round_number == Constants.punishment_rounds[0]
 
 
 class Contribute(Page):
@@ -51,11 +60,23 @@ class AfterPunishmentWP(WaitPage):
 
 
 class Results(Page):
-    ...
+    def vars_for_template(self):
+        myown_data = list(
+            self.session.pggfg_player.filter(participant=self.participant).values_list('contribution', flat=True))
+        group_data = list(self.session.pggfg_group.filter(id_in_subsession=self.group.id_in_subsession).values_list(
+            'average_contribution', flat=True))
+        return dict(
+            highcharts_series=[
+                {'name': 'Средний вклад', 'data': group_data},
+                {'name': 'Мой вклад', 'data': myown_data},
+            ]
+        )
 
 
 page_sequence = [
-    # Intro,
+    FirstWP,
+    Introduction,
+    PunishmentIntroduction,
     Contribute,
     AfterContribWP,
     Punishment,

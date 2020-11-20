@@ -1,0 +1,43 @@
+{% extends 'pggfg/includes/instructions_base.html' %}
+{% block content %}
+
+
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+            В этом исследовании вы будете принимать решение в группе из
+            of <b>{{ Constants.players_per_group }}</b> участников.
+            Вам надо будет принять решение об инвестиции, описанном ниже. Вы и {{ Constants.num_others_per_group }}
+            других участника будут принимать такие решения на протяжении
+            {{ Constants.num_rounds }} периодов.
+        </li>
+        <li class="list-group-item">
+
+            В начале каждого периода каждый участник получает
+
+            <strong>{{ Constants.endowment}}</strong> токенов.
+            У группы есть возможность вложиться в общий проект. Каждый участник принимает решение сколько он или она
+            лично хотят вложить в этот проект.
+            Вы можете вложить любое число от <strong>0
+            до {{ Constants.endowment }} токенов</strong>.
+        </li>
+        <li class="list-group-item">
+            Доходы от проекта вычисляются следующем образом:
+            Вклады всех <strong>{{ Constants.players_per_group }}</strong> участников суммируются и умножаются на
+            коэффициент <strong>{{ Constants.efficiency_factor }}</strong>.
+            Затем итоговая сумма делится поровну между всеми членами группы, вне зависимости от того, кто сколько
+            вложил.
+
+        </li>
+        <li class="list-group-item lead text-center">
+
+            Ваш доход равен: ваша прибыль от общего проекта <b>плюс</b> та сумма, которую вы не вложили в проект.
+
+        </li>
+
+        <li class="list-group-item">
+    <h5 class="text-center">Пример:</h5>
+            {% include 'pggfg/includes/slider.html' %}
+        </li>
+    </ul>
+
+{% endblock %}

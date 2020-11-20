@@ -31,7 +31,7 @@ class PunishmentFormset(BaseInlineFormSet):
         for form in self.forms:
             amounts.append(form.cleaned_data['amount'])
         if sum(amounts) > punishment_endowment:
-            self.non_field_errors = "In total you can't send more than {endowment} points!".format(
+            self.non_field_errors = "Вы не можете послать больше чем {endowment} токенов!".format(
                 endowment=punishment_endowment)
             raise ValidationError(self.non_field_errors)
 

@@ -1,25 +1,26 @@
 <div id="app">
-    <div class="card mt-3">
-        <div class="card-body mt-3">
-            <h5 class="text-center">Если вы вложите:</h5>
-            <div>
-            <vue-slider   class='mb-3' :tooltip="'always'" :tooltip-placement="'top'" v-model="yourOwn" min="0" :max="endowment" :marks="marks"></vue-slider>
-                </div>
-            <h5 class="text-center">А {{ Constants.num_others_per_group }} других участника вложат:</h5>
 
-            <vue-slider class="mb-5" :tooltip="'always'" :tooltip-placement="'top'" v-model="other" min="0" :max="endowment" :marks="marks"></vue-slider>
-
-            <div class="border my-3 p-3 lead text-center">Ваш доход в этом периоде составит: <b>[[payoff.toFixed(0)]]</b>
-            </div>
-            <div class="border p-3 lead text-center">Средний доход остальных участников в этом периоде составит: <b>[[otherPayoff.toFixed(0)]]</b>
-            </div>
-
-        </div>
+    <h6 class="text-center">Если вы вложите:</h6>
+    <div>
+        <vue-slider class='mb-3' :tooltip="'always'" :tooltip-placement="'top'" v-model="yourOwn" min="0"
+                    :max="endowment" :marks="marks"></vue-slider>
     </div>
+    <h6 class="text-center">А {{ Constants.num_others_per_group }} других участника вложат:</h6 class="text-center">
+
+    <vue-slider class="mb-5" :tooltip="'always'" :tooltip-placement="'top'" v-model="other" min="0"
+                :max="endowment" :marks="marks"></vue-slider>
+
+    <div class="border my-3 p-3 lead text-center">Ваш доход в этом периоде составит:
+        <span class="badge badge-success"><b>[[payoff.toFixed(0)]]</b></span>
+    </div>
+    <div class="border p-3 lead text-center">Средний доход остальных участников в этом периоде составит:
+        <span class="badge badge-info"><b>[[otherPayoff.toFixed(0)]]</b></span>
+    </div>
+
 </div>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vue-slider-component@latest/theme/default.css">
 <script src="https://unpkg.com/vue@2.5.2/dist/vue.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/vue-slider-component@latest/dist/vue-slider-component.umd.min.js"></script>
+<script src="https://unpkg.com/vuejs-slider-component@2.6.2/dist"></script>
 <script>
     const efficiency_factor =
     {{ Constants.efficiency_factor|json }}
