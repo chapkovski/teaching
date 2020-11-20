@@ -32,11 +32,10 @@ class Subsession(BaseSubsession):
     punishment = models.BooleanField()
 
     def vars_for_admin_report(self):
-
         subsession_data = list(
             self.session.pggfg_group.all().values(
                 'round_number').annotate(s=Avg('average_contribution')).values_list('s', flat=True))
-        subsession_data = [round(i, 2)  if i else None for i in subsession_data]
+        subsession_data = [round(i, 2) if i else None for i in subsession_data]
 
         return dict(
             highcharts_series=[
@@ -50,17 +49,19 @@ class Subsession(BaseSubsession):
 
     def creating_session(self):
         self.punishment = self.round_number in Constants.punishment_rounds
-        ps = []
-        for p in self.get_players():
-            for o in p.get_others_in_group():
-                ps.append(Punishment(sender=p, receiver=o, ))
-        Punishment.objects.bulk_create(ps)
 
 
 class Group(BaseGroup):
     total_contribution = models.IntegerField()
     average_contribution = models.FloatField()
     individual_share = models.CurrencyField()
+
+    def create_punishment_records(self):
+        ps = []
+        for p in self.get_players():
+            for o in p.get_others_in_group():
+                ps.append(Punishment(sender=p, receiver=o, ))
+        Punishment.objects.bulk_create(ps)
 
     def set_pd_payoffs(self):
         self.total_contribution = sum([p.contribution for p in self.get_players()])

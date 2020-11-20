@@ -12,16 +12,18 @@ class FirstWP(WaitPage):
         return self.subsession.round_number == 1
 
     group_by_arrival_time = True
+class SecondWP(WaitPage):
+
+
+    after_all_players_arrive = 'create_punishment_records'
 
 
 class Introduction(Page):
-
     def is_displayed(self):
         return self.subsession.round_number == 1
 
 
 class PunishmentIntroduction(Page):
-
     def is_displayed(self):
         return self.subsession.round_number == Constants.punishment_rounds[0]
 
@@ -79,6 +81,7 @@ class Results(Page):
 
 page_sequence = [
     FirstWP,
+    SecondWP,
     Introduction,
     PunishmentIntroduction,
     Contribute,
