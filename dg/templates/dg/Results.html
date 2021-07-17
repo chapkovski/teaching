@@ -1,6 +1,6 @@
 {% extends "global/Base.html" %}
 {% block title %}
-    Результаты
+    Results
 {% endblock %}
 
 {% block content %}
@@ -9,9 +9,9 @@
 
     <table class="table table-striped table-hover">
         <tr>
-            <th>Вопрос</th>
-            <th>Ваш ответ</th>
-            <th>Средний ответ участников</th>
+            <th>Question</th>
+            <th>Your answer</th>
+            <th>Mean answer of participants</th>
         </tr>
         {% for i in player.get_full_data %}
 

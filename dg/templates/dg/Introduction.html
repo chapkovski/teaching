@@ -37,7 +37,7 @@
 {% endblock %}
 {% block title %}
 
-    Добро пожаловать
+    Welcome!
 {% endblock %}
 
 {% block content %}
@@ -46,24 +46,22 @@
 
 
             <p>
-                Вы будете случайным образом объединены в пару с другим участниками исследования.
-                Вам будет случайным образом назначена роль либо <b>Отправителя</b>
-                либо <b>Получателем</b>. Если вас случайным образом назначили отправителем, вы можете
-                отправить
-                деньги Получателю.
-                Если вас случайным образом назначили Получателем, вы можете получить деньги,
-                которые вам пошлет Отправитель.
+                You will be randomly paired with other participants in the study.
+                You will be randomly assigned the role of either <b>Sender</b>
+                or <b>Receiver</b>. If you are randomly assigned as Sender, you can
+                send money to the Recipient.
+               If you are randomly assigned as Receiver, you can get money, which Sender will send to you.
 
             </p>
 
 
             <div class="myimg">
-                <img height="200px" src="{% static "dg/0.png" %}"/>
+                <img height="200px" src="{% static "dg/0.jpg" %}"/>
             </div>
 
 
-            В этом задании Отправитель получает {{ Constants.endowment }} баллов и может передать любую сумму от 0
-            до {{ Constants.endowment }} Получателю.
+            In this task, Sender receives {{ Constants.endowment }} points and can transfer any amount from 0
+            to {{ Constants.endowment }} Receiver.
 
             </p>
 
