@@ -25,10 +25,10 @@ class Constants(BaseConstants):
     num_rounds = 1
     endowment = 100
     colors = ['orange', 'blue', 'red', 'green']
-    descriptions = dict(norm_belief='Лично думаю, сколько надо дать другому',
-                        norm_expectation='Думаю, сколько люди ожидают получить',
-                        empirical_expectation='Думаю, сколько люди фактически дают',
-                        decision='Собственное решение')
+    descriptions = dict(norm_belief='Personally, I think how much should I give to another person',
+                        norm_expectation='I think how much people expect to get',
+                        empirical_expectation='I think how much people actually give',
+                        decision='My personal decision')
 
 
 class MyFormField(forms.IntegerField):
@@ -122,27 +122,26 @@ class Player(BasePlayer):
 
     norm_belief = MyOwnField(
         image='1',
-        verbose_name="""Я считаю, что <span class="alert alert-danger">Отправитель</span> 
-        должен отдать Получателю такую долю из 
-        {} токенов:""".format((Constants.endowment)),
+        verbose_name="""I think that <span class="alert alert-danger">Sender</span> 
+        must give Receiver  such a share of 
+        {} tokens:""".format((Constants.endowment)),
         doc="""Personal normative belief"""
     )
     norm_expectation = MyOwnField(
         image='2',
         verbose_name="""
-        Я полагаю, что в среднем <span class="alert alert-danger">Получатель</span>  ожидает 
-         получить от Отправителя следующее число из {} токенов:""".format((Constants.endowment)),
+        I believe that on average <span class="alert alert-danger">Receiver</span>  expects to get such amount of {} tokens from Sender:""".format((Constants.endowment)),
         doc="""Normative expectation"""
     )
     empirical_expectation = MyOwnField(
         image='1',
-        verbose_name="""Я думаю, что в среднем <span class="alert alert-danger">Получатель</span> передаст Отправителю
-         следующее число из {} токенов:""".format((Constants.endowment)),
+        verbose_name="""I think that on average <span class="alert alert-danger">Receiver</span> will transfer to Sender
+         such amount of {} tokens:""".format((Constants.endowment)),
         doc="""Empirical expectation"""
     )
     decision = MyOwnField(
         image='1',
-        verbose_name="""Я передаю отправителю из числа имеющихся у меня {} токенов
+        verbose_name="""I transfer {} tokens from among the available ones to Sender
         :""".format((Constants.endowment)),
         doc="""Normative behaviour""",
     )

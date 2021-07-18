@@ -39,7 +39,7 @@ class Subsession(BaseSubsession):
 
         return dict(
             highcharts_series=[
-                {'name': 'Средний вклад', 'data': subsession_data},
+                {'name': 'Average contribution', 'data': subsession_data},
 
             ]
         )

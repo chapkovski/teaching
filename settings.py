@@ -40,12 +40,12 @@ SESSION_CONFIGS = [
 
 # ISO-639 code
 # for example: de, fr, ja, ko, zh-hans
-LANGUAGE_CODE = 'ru'
+LANGUAGE_CODE = 'en'
 
 # e.g. EUR, GBP, CNY, JPY
 REAL_WORLD_CURRENCY_CODE = 'USD'
 USE_POINTS = True
-POINTS_CUSTOM_NAME = 'токен'
+POINTS_CUSTOM_NAME = 'token'
 
 ROOMS = [{'name': 'hse', 'display_name': 'HSE Study'}]
 
